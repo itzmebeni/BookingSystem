@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'screen/auth/login_screen.dart'; // Add this import for the LoginPage
-import 'screen/auth/signup_screen.dart';
 
 void main() {
   runApp(const MyApp());
