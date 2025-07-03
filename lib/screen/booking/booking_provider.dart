@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart'; // for ChangeNotifier
 import 'package:http/http.dart' as http; // for API requests
-import '../model/booking.dart'; // your Booking model
+import 'booking.dart'; // your Booking model
 
 class BookingProvider with ChangeNotifier {
   Future<void> submitBooking(Booking booking) async {
