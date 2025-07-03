@@ -1,14 +1,18 @@
 // main.dart
 import 'package:booking/screen/booking/car_selection.dart';
 import 'package:booking/screen/booking/customer_form.dart';
+import 'package:booking/screen/home/home_screen.dart';
+import 'package:booking/screen/pending/pending_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:booking/screen/auth/login_screen.dart';
 import 'package:booking/screen/auth/signup_screen.dart';
 import 'package:booking/screen/auth/ChangePass.dart';
 import 'package:booking/screen/booking/ServiceType.dart';
+import 'package:booking/screen/booking/confirmation.dart';
 import 'package:booking/screen/history/history_screen.dart';
 import 'package:booking/screen/booking/car_selection.dart';
 import 'package:booking/screen/booking/customer_form.dart';
+import 'package:booking/screen/pending/pending_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -28,15 +32,20 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
+
+      initialRoute: '/login',       // <‑‑ change this in one line
       initialRoute: '/customer',       // <‑‑ change this in one line
       routes: {
         '/login':      (_) => const LoginPage(),
+        '/home':      (_) => const HomeScreen(),
+        '/confirmation':      (_) => const ConfirmationScreen(),
         '/signup':     (_) => const SignUpScreen(),
         '/changePass': (_) => const ChangePasswordScreen(),
         '/services':   (_) => const ServicesScreen(),
         '/history':    (_) => const HistoryScreen(),
-        '/carselect':  (_) => const CarSelectionScreen(),
-        '/customer':   (_) => const CustomerFormScreen(),
+        '/pending':    (_) => const PendingScreen(),
+        '/cars':    (_) => const CarSelectionScreen(),
+        '/customer':    (_) => const CustomerFormScreen(),
 
 
 
