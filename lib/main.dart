@@ -1,5 +1,5 @@
 import 'package:booking/screen/auth/ChangePass.dart';
-import 'package:booking/screen/auth/ServiceType.dart';
+import 'package:booking/screen/booking/ServiceType.dart';
 import 'package:booking/screen/auth/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'screen/auth/login_screen.dart'; // Add this import for the LoginPage
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const ServicesScreen(),
+      home: const SignUpScreen(),
     );
   }
 }
