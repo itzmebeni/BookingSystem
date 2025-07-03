@@ -42,7 +42,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0f9ba8), Color(0xFF006d77)],
+            colors: [Color(0xFF00B4DB), Color(0xFF0083B0)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
