@@ -6,7 +6,6 @@ import 'package:booking/screen/auth/login_screen.dart';
 import 'package:booking/screen/auth/signup_screen.dart';
 import 'package:booking/screen/auth/ChangePass.dart';
 import 'package:booking/screen/booking/ServiceType.dart';
-import 'package:booking/screen/booking/booking_list_screen.dart';
 import 'package:booking/screen/history/history_screen.dart';
 import 'package:booking/screen/booking/car_selection.dart';
 import 'package:booking/screen/booking/customer_form.dart';
@@ -29,16 +28,15 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
-      initialRoute: '/bookings',       // <‑‑ change this in one line
+      initialRoute: '/customer',       // <‑‑ change this in one line
       routes: {
         '/login':      (_) => const LoginPage(),
         '/signup':     (_) => const SignUpScreen(),
         '/changePass': (_) => const ChangePasswordScreen(),
         '/services':   (_) => const ServicesScreen(),
-        '/bookings':   (_) => const BookingListScreen(),
         '/history':    (_) => const HistoryScreen(),
-        '/carselect':    (_) => const CarSelectionScreen(),
-        '/customer':    (_) => const CustomerFormScreen(),
+        '/carselect':  (_) => const CarSelectionScreen(),
+        '/customer':   (_) => const CustomerFormScreen(),
 
 
 
