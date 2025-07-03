@@ -6,6 +6,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      backgroundColor: const Color(0xFF2299A2), // fallback in case gradient fails
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
@@ -13,93 +15,129 @@ class HomeScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.4),
-                offset: const Offset(0, 5),
-                blurRadius: 6,
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(0, 4),
+                blurRadius: 4,
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(
+            title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins',
-                color: Colors.blue[400],
-                height: 1.2,
-                shadows: const [
-                  Shadow(
-                    offset: Offset(3, 3),
-                    blurRadius: 2,
-                    color: Colors.grey,
-                  ),
-                ],
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Cinzel',
+                color: Color(0xFF006B79),
+                height: 1.1,
               ),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black),
+                icon: const Icon(Icons.menu, color: Colors.black87),
                 onPressed: () {},
               ),
             ],
           ),
         ),
       ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF2299A2), Color(0xFF1F7E90)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              const Spacer(),
 
-      backgroundColor: const Color(0xFF2299A2),
-
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const Spacer(),
-
-            // Welcome Text
-            const Center(
-              child: Text(
-                'Welcome\nBestfriend!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 26,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-
-            const Spacer(),
-
-            // ⬇️ Floating Action Button (moved here)
-            Align(
-              alignment: Alignment.centerRight,
-              child: FloatingActionButton(
-                backgroundColor: Colors.white,
-                onPressed: () {},
-                child: const Text(
-                  '+',
+              const Center(
+                child: Text(
+                  'Welcome\nBestfriend!',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 50,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.white,
+                    height: 1.3,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(1, 1),
+                        blurRadius: 2,
+                        color: Colors.black45,
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 20),
+              const Spacer(),
 
-            // Bottom Navigation
-            Row(
-              children: [
-                _buildNavButton('Home', isActive: true),
-                const SizedBox(width: 8),
-                _buildNavButton('Pending'),
-                const SizedBox(width: 8),
-                _buildNavButton('History'),
-              ],
+              // Add button
+              Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: 55,
+                  height: 55,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFFB7F9F7),
+                  ),
+                  child: const Center(
+                    child: Icon(Icons.add, size: 30, color: Colors.black),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 25),
+
+              // Navigation buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _navPill('Home', isActive: true),
+                  _navPill('Pending'),
+                  _navPill('History'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _navPill(String label, {bool isActive = false}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+      decoration: BoxDecoration(
+        color: isActive ? const Color(0xFF00D6C6) : const Color(0xFF88D4DB),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black38,
+            offset: Offset(2, 2),
+            blurRadius: 3,
+          )
+        ],
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          shadows: [
+            Shadow(
+              offset: Offset(2, 2),
+              blurRadius: 2,
+              color: Colors.black54,
             ),
           ],
         ),
@@ -107,26 +145,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNavButton(String label, {bool isActive = false}) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor:
-          isActive ? const Color(0xFF006B79) : const Color(0xFF88D4DB),
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
-  }
+
 }
