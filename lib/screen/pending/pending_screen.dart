@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HistoryScreen extends StatelessWidget {
-  const HistoryScreen({super.key});
+class PendingScreen extends StatelessWidget {
+  const PendingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +25,8 @@ class HistoryScreen extends StatelessWidget {
             title: Text(
               'E&C\nCarwash',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins', // <- Now using Poppins
                 color: Colors.blue[400],
                 height: 1.2,
                 shadows: [
@@ -58,13 +57,13 @@ class HistoryScreen extends StatelessWidget {
           ),
         ),
         child: SafeArea(
-          top: false, // we already have an AppBar
+          top: false,
           child: Column(
             children: [
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12.0),
                 child: Text(
-                  'History',
+                  'Pending',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -74,7 +73,7 @@ class HistoryScreen extends StatelessWidget {
                 ),
               ),
 
-              // History Cards
+              // Pending Cards
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -94,32 +93,52 @@ class HistoryScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                      child: const Column(
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                            children: const [
                               Text('Date:', style: TextStyle(color: Colors.white)),
                               Text('05/27/2025', style: TextStyle(color: Colors.white)),
                             ],
                           ),
-                          SizedBox(height: 6),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                            children: const [
                               Text('Car Type:', style: TextStyle(color: Colors.white)),
                               Text('Sedan', style: TextStyle(color: Colors.white)),
                             ],
                           ),
-                          SizedBox(height: 6),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                            children: const [
                               Text('Total:', style: TextStyle(color: Colors.white)),
                               Text('290.00', style: TextStyle(color: Colors.white)),
                             ],
                           ),
+                          const SizedBox(height: 8),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Detail action
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                                minimumSize: const Size(70, 32), // smaller size
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                textStyle: const TextStyle(fontSize: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                elevation: 2,
+                              ),
+                              child: const Text("Detail"),
+                            ),
+                          ),
+
                         ],
                       ),
                     );
@@ -134,8 +153,8 @@ class HistoryScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _buildNavButton(context, 'Home', false),
-                    _buildNavButton(context, 'Pending', false),
-                    _buildNavButton(context, 'History', true),
+                    _buildNavButton(context, 'Pending', true), // <- Now active
+                    _buildNavButton(context, 'History', false),
                   ],
                 ),
               ),

@@ -6,7 +6,6 @@ class BookingListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Sample booking data
     final bookings = [
       {
         'service': 'Car Wash - Premium',
@@ -22,25 +21,62 @@ class BookingListScreen extends StatelessWidget {
         'time': '10:00 AM',
         'status': 'Pending'
       },
+      {
+        'service': 'Engine Detailing',
+        'customer': 'Chris M',
+        'date': 'July 4, 2025',
+        'time': '12:00 PM',
+        'status': 'Cancelled'
+      },
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bookings')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView.builder(
-          itemCount: bookings.length,
-          itemBuilder: (context, index) {
-            final booking = bookings[index];
-            return BookingCard(
-              serviceName: booking['service']!,
-              customerName: booking['customer']!,
-              date: booking['date']!,
-              time: booking['time']!,
-              status: booking['status']!,
-            );
-          },
-        ),
+      appBar: AppBar(
+        title: const Text('Booking List'),
+      ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Define breakpoint for tablet vs mobile
+          final isTablet = constraints.maxWidth > 600;
+
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: isTablet
+                ? GridView.builder(
+              itemCount: bookings.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // two columns on wide screen
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.5,
+              ),
+              itemBuilder: (context, index) {
+                final booking = bookings[index];
+                return BookingCard(
+                  serviceName: booking['service']!,
+                  customerName: booking['customer']!,
+                  date: booking['date']!,
+                  time: booking['time']!,
+                  status: booking['status']!,
+                );
+              },
+            )
+                : ListView.separated(
+                itemCount: bookings.length,
+                separatorBuilder: (, _) => const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final booking = bookings[index];
+              return BookingCard(
+                serviceName: booking['service']!,
+                customerName: booking['customer']!,
+                date: booking['date']!,
+                time: booking['time']!,
+                status: booking['status']!,
+              );
+            },
+          ),
+          );
+        },
       ),
     );
   }
