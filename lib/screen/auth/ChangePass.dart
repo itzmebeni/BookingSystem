@@ -1,42 +1,41 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
 
-class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   bool _isPressed = false;
 
-  Widget _buildTextField(String hint, TextEditingController controller, {bool isPassword = false}) {
+  Widget _buildTextField(String hint, TextEditingController controller, {bool isPassword = true}) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
+        hintStyle: const TextStyle(color: Colors.white),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.2),
+        fillColor: Colors.cyan[600],
         contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
       ),
     );
   }
 
-  void _handleSignUp() {
+  void _changePassword() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Signing up...')),
+      const SnackBar(content: Text('Password Changed')),
     );
   }
 
@@ -51,44 +50,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: Center(
+        child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'E&C',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.5,
-                  ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Icon(Icons.arrow_back, color: Colors.black),
                 ),
+                const SizedBox(height: 20),
+
+                // Avatar
+                const CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Colors.purpleAccent,
+                  child: Icon(Icons.person, size: 60, color: Colors.white),
+                ),
+                const SizedBox(height: 16),
+
+                // Name
                 const Text(
-                  'CARWASH',
+                  'John Doe',
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
                     color: Colors.white,
-                    letterSpacing: 2,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
                   ),
                 ),
                 const SizedBox(height: 32),
-                _buildTextField('Create User Name', _usernameController),
-                const SizedBox(height: 16),
-                _buildTextField('Create Password', _passwordController, isPassword: true),
-                const SizedBox(height: 16),
-                _buildTextField('Confirm Password', _confirmPasswordController, isPassword: true),
-                const SizedBox(height: 24),
 
-                // Simple animated pressable button
+                // Input Fields
+                _buildTextField('enter old password', _oldPasswordController),
+                const SizedBox(height: 16),
+                _buildTextField('create new password', _newPasswordController),
+                const SizedBox(height: 16),
+                _buildTextField('Confirm password', _confirmPasswordController),
+                const SizedBox(height: 28),
+
+                // Animated Change Password Button
                 GestureDetector(
                   onTapDown: (_) => setState(() => _isPressed = true),
                   onTapUp: (_) {
                     setState(() => _isPressed = false);
-                    _handleSignUp();
+                    _changePassword();
                   },
                   onTapCancel: () => setState(() => _isPressed = false),
                   child: AnimatedScale(
@@ -98,10 +104,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       decoration: BoxDecoration(
+                        color: Colors.teal,
                         borderRadius: BorderRadius.circular(30),
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
-                        ),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.3),
@@ -112,33 +116,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       child: const Center(
                         child: Text(
-                          'Sign Up',
+                          'Change Password',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             letterSpacing: 1,
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginPage()),
-                    );
-                  },
-                  child: const Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
                     ),
                   ),
                 ),
