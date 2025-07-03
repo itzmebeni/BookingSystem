@@ -34,7 +34,9 @@ class MyApp extends StatelessWidget {
           elevation: 0,
         ),
       ),
+
       initialRoute: '/pending',       // <‑‑ change this in one line
+
       routes: {
         '/login':      (_) => const LoginPage(),
         '/home':      (_) => const HomeScreen(),
