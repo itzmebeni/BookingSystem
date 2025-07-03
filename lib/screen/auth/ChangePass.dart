@@ -45,7 +45,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0f9ba8), Color(0xFF00344d)],
+            colors:[Color(0xFF0f9ba8), Color(0xFF00344d)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
