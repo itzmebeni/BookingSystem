@@ -6,6 +6,7 @@ class ConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF2299A2),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
@@ -13,119 +14,103 @@ class ConfirmationScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.4),
-                offset: const Offset(0, 5),
-                blurRadius: 6,
+                color: Color.fromRGBO(0, 0, 0, 0.3),
+                offset: const Offset(0, 4),
+                blurRadius: 4,
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () {},
-            ),
-            title: Text(
-              'Confirmation',
+            automaticallyImplyLeading: true, // <-- Allow back button
+            title: const Text(
+              'E&C\nCarwash',
               style: TextStyle(
                 fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                shadows: [
-                  Shadow(
-                    offset: Offset(1, 1),
-                    blurRadius: 2,
-                    color: Colors.black26,
-                  ),
-                ],
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Cinzel',
+                color: Color(0xFF006B79),
+                height: 1.1,
               ),
             ),
-            centerTitle: false,
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF0f9ba8), Color(0xFF2299A2)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.menu, color: Colors.black87),
+                onPressed: () {},
               ),
-            ),
+            ],
           ),
         ),
       ),
-      backgroundColor: const Color(0xFF2299A2),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: const Color(0xFFD1F2F3),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  offset: const Offset(2, 3),
-                  blurRadius: 4,
-                )
-              ],
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Card(
+            color: Colors.white,
+            elevation: 6,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildInfoRow('Name:', 'John Doe'),
-                _buildInfoRow('Number:', '09987654321'),
-                _buildInfoRow('Plate n:', 'LY143'),
-                _buildInfoRow('Car Type:', 'Sedan'),
-                _buildInfoRow('Date:', '05/27/2025'),
-                _buildInfoRow('Time:', '9:30 am'),
-                const SizedBox(height: 10),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Confirmation',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF006B79),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Details Section
+                  _buildDetails('Name', 'ryzen magsino'),
+                  _buildDetails('Number', '09987654321'),
+                  _buildDetails('Plate n', 'LY143'),
+                  _buildDetails('Car Type', 'Sedan'),
+                  _buildDetails('Date', '05/27/2025'),
+                  _buildDetails('Time', '9:30 am'),
+                  const SizedBox(height: 20),
+                  // Services Section
+                  const Text(
                     'Services:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 4),
-                _buildServiceRow('EC1...............................', '130.00'),
-                _buildServiceRow('EC1...............................', '160.00'),
-                const SizedBox(height: 6),
-                _buildInfoRow('Total:', '290.00'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4ED6E3),
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 6,
-                  ),
-                  child: const Text(
-                    'Apply',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                OutlinedButton(
-                  onPressed: () {},
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFFB6E5EE)),
-                    backgroundColor: const Color(0xFFB6E5EE),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: const Text(
-                    'Cancel Booking',
-                    style: TextStyle(color: Colors.black, fontSize: 14),
+                  _buildService('EC1', 130.00),
+                  _buildService('EC2', 160.00),
+                  const Divider(),
+                  _buildService('Total', 290.00, isTotal: true),
+                  const SizedBox(height: 30),
+                  // Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildButton(
+                        context,
+                        'Cancel Booking',
+                        Colors.red,
+                            () {
+                          Navigator.pop(context); // Go back to the previous screen
+                        },
+                      ),
+                      _buildButton(
+                        context,
+                        'Apply',
+                        Color(0xFF26C5E4),
+                            () {
+                          // Apply action logic here
+                        },
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -133,26 +118,71 @@ class ConfirmationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  // Helper widget to create detail rows
+  Widget _buildDetails(String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value),
+          Text(
+            '$title:',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildServiceRow(String service, String price) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(service),
-        Text(price),
-      ],
+  // Helper widget to create services rows
+  Widget _buildService(String service, double price, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            service,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            '\$${price.toStringAsFixed(2)}',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper widget to create action buttons
+  Widget _buildButton(BuildContext context, String text, Color color, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        elevation: 4,
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }

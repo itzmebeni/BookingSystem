@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      initialRoute: '/cars',
+      initialRoute: '/login',
       routes: {
         '/login':      (_) => const LoginPage(),
         '/home':      (_) => const HomeScreen(),
@@ -41,7 +41,8 @@ class MyApp extends StatelessWidget {
         '/history':    (_) => const HistoryScreen(),
         '/pending':    (_) => const PendingScreen(),
         '/cars':    (_) => const CarSelectionScreen(),
-        '/customer':    (_) => const CarwashFormApp(),
+        '/customer':    (_) => const CustomerFormScreen(),
+
 
 
 

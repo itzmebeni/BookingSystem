@@ -7,7 +7,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      backgroundColor: const Color(0xFF2299A2), // fallback in case gradient fails
+      backgroundColor: const Color(0xFF2299A2), // fallback if gradient fails
+      // ── APP BAR ────────────────────────────────────────────────────────────────
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Color.fromRGBO(0, 0, 0, 0.3),
                 offset: const Offset(0, 4),
                 blurRadius: 4,
               ),
@@ -24,6 +25,8 @@ class HomeScreen extends StatelessWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            automaticallyImplyLeading:
+            false, // <- no back arrow because this is the root screen
             title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
@@ -37,12 +40,13 @@ class HomeScreen extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.menu, color: Colors.black87),
-                onPressed: () {},
+                onPressed: () {}, // TODO: open drawer or menu sheet
               ),
             ],
           ),
         ),
       ),
+      // ── BODY ───────────────────────────────────────────────────────────────────
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -56,7 +60,7 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(),
-
+              // Welcome text
               const Center(
                 child: Text(
                   'Welcome\nBestfriend!',
@@ -76,34 +80,47 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
               const Spacer(),
-
-              // Add button
+              // Floating “add” button
               Align(
                 alignment: Alignment.centerRight,
-                child: Container(
-                  width: 55,
-                  height: 55,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFB7F9F7),
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.add, size: 30, color: Colors.black),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/cars'); // TODO: open “Add booking” screen or modal
+                  },
+                  child: Container(
+                    width: 55,
+                    height: 55,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFB7F9F7),
+                    ),
+                    child: const Center(
+                      child: Icon(Icons.add, size: 30, color: Colors.black),
+                    ),
                   ),
                 ),
               ),
-
               const SizedBox(height: 25),
-
-              // Navigation buttons
+              // Navigation pills
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _navPill('Home', isActive: true),
-                  _navPill('Pending'),
-                  _navPill('History'),
+                  _navPill(
+                    'Home',
+                    isActive: true,
+                    onTap: () {
+                      // already on Home → do nothing or scroll to top
+                    },
+                  ),
+                  _navPill(
+                    'Pending',
+                    onTap: () => Navigator.pushNamed(context, '/pending'),
+                  ),
+                  _navPill(
+                    'History',
+                    onTap: () => Navigator.pushNamed(context, '/history'),
+                  ),
                 ],
               ),
             ],
@@ -113,37 +130,44 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _navPill(String label, {bool isActive = false}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-      decoration: BoxDecoration(
-        color: isActive ? const Color(0xFF00D6C6) : const Color(0xFF88D4DB),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black38,
-            offset: Offset(2, 2),
-            blurRadius: 3,
-          )
-        ],
-      ),
-      child: Text(
-        label,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          shadows: [
-            Shadow(
+  // ── STYLED PILL WIDGET ───────────────────────────────────────────────────────
+  Widget _navPill(
+      String label, {
+        bool isActive = false,
+        required VoidCallback onTap,
+      }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        decoration: BoxDecoration(
+          color:
+          isActive ? const Color(0xFF00D6C6) : const Color(0xFF88D4DB),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black38,
               offset: Offset(2, 2),
-              blurRadius: 2,
-              color: Colors.black54,
-            ),
+              blurRadius: 3,
+            )
           ],
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                offset: Offset(2, 2),
+                blurRadius: 2,
+                color: Colors.black54,
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
-
-
 }

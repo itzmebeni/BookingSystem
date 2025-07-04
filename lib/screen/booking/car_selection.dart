@@ -15,7 +15,7 @@ class CarSelectionScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Color.fromRGBO(0, 0, 0, 0.3),
                 offset: const Offset(0, 4),
                 blurRadius: 4,
               ),
@@ -75,6 +75,7 @@ class CarSelectionScreen extends StatelessWidget {
                 itemCount: 5, // 5 items total
                 itemBuilder: (context, index) {
                   return _carOption(
+                    context,
                     ['SUV', 'SEDAN', 'VAN', 'MOTORCYCLE', 'PICK-UP'][index],
                     [
                       'assets/images/suv.png',
@@ -93,10 +94,10 @@ class CarSelectionScreen extends StatelessWidget {
     );
   }
 
-  Widget _carOption(String label, String imagePath) {
+  Widget _carOption(BuildContext context, String label, String imagePath) {
     return GestureDetector(
       onTap: () {
-        // Handle car type selection
+        Navigator.pushNamed(context, '/services');
       },
       child: Container(
         decoration: BoxDecoration(
@@ -104,7 +105,7 @@ class CarSelectionScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: const Color.fromRGBO(0, 0, 0, 0.3),
               offset: const Offset(0, 2),
               blurRadius: 4,
             ),
@@ -115,9 +116,9 @@ class CarSelectionScreen extends StatelessWidget {
           children: [
             Image.asset(
               imagePath,
-              width: 100,  // Increased width for larger image
-              height: 100, // Increased height for larger image
-              fit: BoxFit.contain, // Keeps the image fully visible
+              width: 100,
+              height: 100,
+              fit: BoxFit.contain,
             ),
             const SizedBox(height: 10),
             Text(
@@ -133,4 +134,6 @@ class CarSelectionScreen extends StatelessWidget {
       ),
     );
   }
+
+
 }
