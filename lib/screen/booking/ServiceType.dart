@@ -8,90 +8,100 @@ class ServicesScreen extends StatefulWidget {
 }
 
 class _ServicesScreenState extends State<ServicesScreen> {
-  final String selectedVehicle = 'Sedan'; // You can pass this from previous screen
+  final String selectedVehicle = 'Sedan';
 
-  final List<Map<String, dynamic>> allServices = List.generate(15, (index) {
+  final List<Map<String, dynamic>> allServices = List.generate(15, (i) {
     return {
-      'name': 'EC ${index + 1}',
+      'name': 'EC ${i + 1}',
       'details': 'Carwash\nRepaint',
-      'price': 125 + (index % 3) * 25,
+      'price': 125 + (i % 3) * 25,
     };
   });
 
   final List<Map<String, dynamic>> selectedServices = [];
 
-  void toggleService(Map<String, dynamic> service) {
-    setState(() {
-      if (selectedServices.contains(service)) {
-        selectedServices.remove(service);
-      } else {
-        selectedServices.add(service);
-      }
-    });
-  }
+  void toggleService(Map<String, dynamic> s) => setState(() {
+    selectedServices.contains(s) ? selectedServices.remove(s) : selectedServices.add(s);
+  });
 
-  void clearBooking() {
-    setState(() => selectedServices.clear());
-  }
+  void clearBooking() => setState(selectedServices.clear);
 
-  int get totalAmount => selectedServices.fold(0, (sum, item) => sum + item['price'] as int);
+  int get totalAmount => selectedServices.fold(0, (sum, s) => sum + s['price'] as int);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      backgroundColor: const Color(0xFF2299A2),
+      // ── Header (same as Home, plus back icon) ───────────────────────────────
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.3), offset: Offset(0, 4), blurRadius: 4)],
+          ),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: const Text(
+              'E&C\nCarwash',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Cinzel',
+                color: Color(0xFF006B79),
+                height: 1.1,
+              ),
+            ),
+            actions: [
+              IconButton(icon: const Icon(Icons.menu, color: Colors.black87), onPressed: () {}),
+            ],
+          ),
+        ),
+      ),
+      // ── Body with matching gradient ─────────────────────────────────────────
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF00B4DB), Color(0xFF0083B0)],
+            colors: [Color(0xFF2299A2), Color(0xFF1F7E90)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
         child: SafeArea(
+          top: false,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                // Top bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Icon(Icons.arrow_back, color: Colors.black),
-                    Text(
-                      "Services",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Icon(Icons.menu, color: Colors.black),
-                  ],
+                const SizedBox(height: 16),
+                const Text(
+                  'Services',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [Shadow(offset: Offset(1, 1), blurRadius: 2, color: Colors.black45)],
+                  ),
                 ),
                 const SizedBox(height: 16),
-
-                // Vehicle indicator
+                // vehicle pill
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.teal.shade700,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.4),
-                        offset: const Offset(0, 3),
-                        blurRadius: 4,
-                      )
-                    ],
+                    boxShadow: [const BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.4), offset: Offset(0, 3), blurRadius: 4)],
                   ),
-                  child: Text(
-                    'Vehicle: $selectedVehicle',
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
+                  child: Text('Vehicle: $selectedVehicle', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 16),
-
-                // Services Grid
+                // services grid
                 Expanded(
                   child: GridView.builder(
                     itemCount: allServices.length,
@@ -101,47 +111,27 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       crossAxisSpacing: 10,
                       childAspectRatio: 0.85,
                     ),
-                    itemBuilder: (context, index) {
-                      final service = allServices[index];
-                      final isSelected = selectedServices.contains(service);
+                    itemBuilder: (context, i) {
+                      final s = allServices[i];
+                      final selected = selectedServices.contains(s);
                       return GestureDetector(
-                        onTap: () => toggleService(service),
+                        onTap: () => toggleService(s),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: isSelected ? Colors.tealAccent[50] : Colors.teal[800],
+                            color: selected ? Colors.tealAccent[50] : Colors.teal[800],
                             borderRadius: BorderRadius.circular(12),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black45,
-                                blurRadius: 4,
-                                offset: Offset(2, 4),
-                              ),
-                            ],
+                            boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))],
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                service['name'],
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14),
-                              ),
+                              Text(s['name'], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
                               const SizedBox(height: 4),
-                              Text(
-                                service['details'],
-                                style: const TextStyle(
-                                    color: Colors.white70, fontSize: 12),
-                              ),
+                              Text(s['details'], style: const TextStyle(color: Colors.white70, fontSize: 12)),
                               const Spacer(),
-                              Text(
-                                'php ${service['price']}',
-                                style: const TextStyle(
-                                    color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
+                              Text('PHP ${s['price']}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
@@ -149,128 +139,97 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     },
                   ),
                 ),
-
                 const SizedBox(height: 16),
-
-                // POS summary box
+                // ── POS summary with header row ──────────────────────────────
                 Container(
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  decoration: BoxDecoration(color: const Color.fromRGBO(0, 0, 0, 0.2), borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Header row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text('Service', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          Text('Amount', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
                       if (selectedServices.isEmpty)
-                        const Text('No services selected',
-                            style: TextStyle(color: Colors.white)),
-                      ...selectedServices.map((item) => Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(item['name'],
-                                style: const TextStyle(color: Colors.white)),
-                            Text('${item['price']} Php',
-                                style: const TextStyle(color: Colors.white)),
-                          ],
+                        const Text('No services selected', style: TextStyle(color: Colors.white))
+                      else
+                        ...selectedServices.map(
+                              (item) => Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(item['name'], style: const TextStyle(color: Colors.white)),
+                                Text('${item['price']} Php', style: const TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          ),
                         ),
-                      )),
                       if (selectedServices.isNotEmpty) const Divider(),
                       if (selectedServices.isNotEmpty)
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Total:',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                            Text('$totalAmount Php',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                            const Text('Total:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+                            Text('$totalAmount Php', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                           ],
                         ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 12),
-
-                // Buttons
+                // ── Buttons (Cancel left, Proceed right) ───────────────────
                 Row(
                   children: [
+                    // CANCEL BOOKING (left)
                     Expanded(
                       child: GestureDetector(
-                        onTap: selectedServices.isEmpty
-                            ? null
-                            : () {
-                          // Proceed logic here
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content:
-                                Text("Proceeding to booking...")),
-                          );
+                        onTap: () {
+                          clearBooking();                    // empty the cart
+                          Navigator.pushNamed(context, '/home');
                         },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 100),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          decoration: BoxDecoration(
-                            color: selectedServices.isEmpty
-                                ? Colors.grey
-                                : Colors.teal[600],
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black45,
-                                blurRadius: 4,
-                                offset: Offset(2, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Center(
-                            child: Text(
-                              'Proceed',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: clearBooking,
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           decoration: BoxDecoration(
                             color: Colors.red,
                             borderRadius: BorderRadius.circular(30),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black45,
-                                blurRadius: 4,
-                                offset: Offset(2, 4),
-                              ),
-                            ],
+                            boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))],
                           ),
                           child: const Center(
-                            child: Text(
-                              'Cancel Booking',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
+                            child: Text('Cancel Booking', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    // PROCEED (right)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: selectedServices.isEmpty
+                            ? null
+                            : () => Navigator.pushNamed(context, '/customer'),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 100),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            color: selectedServices.isEmpty ? Colors.grey : const Color(0xFF26C5E4), // 26C5E4
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))],
+                          ),
+                          child: const Center(
+                            child: Text('Proceed', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16),
               ],
             ),
