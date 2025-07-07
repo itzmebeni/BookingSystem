@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/cars'); // TODO: open “Add booking” screen or modal
+
                   },
                   child: Container(
                     width: 55,
@@ -115,11 +115,17 @@ class HomeScreen extends StatelessWidget {
                   ),
                   _navPill(
                     'Pending',
-                    onTap: () => Navigator.pushNamed(context, '/pending'),
+                    isActive: true,
+                    onTap: () {
+                      // already on Home → do nothing or scroll to top
+                    },
                   ),
                   _navPill(
                     'History',
-                    onTap: () => Navigator.pushNamed(context, '/history'),
+                    isActive: true,
+                    onTap: () {
+                      // already on Home → do nothing or scroll to top
+                    },
                   ),
                 ],
               ),

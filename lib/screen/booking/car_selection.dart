@@ -97,7 +97,7 @@ class CarSelectionScreen extends StatelessWidget {
   Widget _carOption(BuildContext context, String label, String imagePath) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/services');
+
       },
       child: Container(
         decoration: BoxDecoration(

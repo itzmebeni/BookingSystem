@@ -132,7 +132,10 @@ class PendingScreen extends StatelessWidget {
                 children: [
                   _navPill(
                     'Home',
-                    onTap: () => Navigator.pushNamed(context, '/home'),
+                    isActive: true,
+                    onTap: () {
+                      // already on Home → do nothing or scroll to top
+                    },
                   ),
                   _navPill(
                     'Pending',
@@ -141,7 +144,10 @@ class PendingScreen extends StatelessWidget {
                   ),
                   _navPill(
                     'History',
-                    onTap: () => Navigator.pushNamed(context, '/history'),
+                    isActive: true,
+                    onTap: () {
+                      // already on Home → do nothing or scroll to top
+                    },
                   ),
                 ],
               ),

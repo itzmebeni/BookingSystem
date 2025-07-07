@@ -192,7 +192,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       child: GestureDetector(
                         onTap: () {
                           clearBooking();                    // empty the cart
-                          Navigator.pushNamed(context, '/home');
+
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -211,9 +211,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     // PROCEED (right)
                     Expanded(
                       child: GestureDetector(
-                        onTap: selectedServices.isEmpty
-                            ? null
-                            : () => Navigator.pushNamed(context, '/customer'),
+
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 100),
                           padding: const EdgeInsets.symmetric(vertical: 14),
