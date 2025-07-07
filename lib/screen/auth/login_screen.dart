@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       const SnackBar(content: Text('Logging in...')),
     );
 
-    Navigator.pushReplacementNamed(context, '/services'); // Or your main page route
+    Navigator.pushReplacementNamed(context, '/home'); // Or your main page route
   }
 
   @override
