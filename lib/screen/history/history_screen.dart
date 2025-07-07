@@ -6,6 +6,8 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      backgroundColor: const Color(0xFF2299A2),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
@@ -13,71 +15,66 @@ class HistoryScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.4),
-                offset: const Offset(0, 5),
-                blurRadius: 6,
+                color: Colors.black.withOpacity(0.3),
+                offset: const Offset(0, 4),
+                blurRadius: 4,
               ),
             ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
-            elevation: 0, // remove default shadow
-            title: Text(
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins', // <- Now using Poppins
-                color: Colors.blue[400],
-                height: 1.2,
-                shadows: [
-                  const Shadow(
-                    offset: Offset(3, 3),
-                    blurRadius: 2,
-                    color: Colors.grey,
-                  ),
-                ],
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Cinzel',
+                color: Color(0xFF006B79),
+                height: 1.1,
               ),
             ),
             actions: [
               IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black),
+                icon: const Icon(Icons.menu, color: Colors.black87),
                 onPressed: () {},
               ),
             ],
           ),
         ),
       ),
-
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF0f9ba8), Color(0xFF00344d)],
+            colors: [Color(0xFF2299A2), Color(0xFF1F7E90)],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
-        child: SafeArea(
-          top: false, // we already have an AppBar
+        child: Padding(
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.0),
-                child: Text(
-                  'History',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [Shadow(blurRadius: 2, offset: Offset(1, 1))],
+                padding: EdgeInsets.only(top: 10, bottom: 20),
+                child: Center(
+                  child: Text(
+                    'History',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      height: 1.2,
+                      shadows: [Shadow(blurRadius: 2, offset: Offset(1, 1))],
+                    ),
                   ),
                 ),
               ),
 
-              // History Cards
+              // ── History Cards ──
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: 2,
                   itemBuilder: (context, index) {
                     return Container(
@@ -127,17 +124,26 @@ class HistoryScreen extends StatelessWidget {
                 ),
               ),
 
-              // Bottom Navigation
-              Padding(
-                padding: const EdgeInsets.only(bottom: 12, top: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildNavButton(context, 'Home', false),
-                    _buildNavButton(context, 'Pending', false),
-                    _buildNavButton(context, 'History', true),
-                  ],
-                ),
+              const SizedBox(height: 16),
+
+              // ── Navigation Pills ──
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _navPill(
+                    'Home',
+                    onTap: () => Navigator.pushNamed(context, '/home'),
+                  ),
+                  _navPill(
+                    'Pending',
+                    onTap: () => Navigator.pushNamed(context, '/pending'),
+                  ),
+                  _navPill(
+                    'History',
+                    isActive: true,
+                    onTap: () {}, // Already here
+                  ),
+                ],
               ),
             ],
           ),
@@ -146,19 +152,43 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNavButton(BuildContext context, String title, bool isActive) {
-    return ElevatedButton(
-      onPressed: () {
-        // Handle navigation
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isActive ? Colors.tealAccent : Colors.white,
-        foregroundColor: Colors.black,
-        shadowColor: Colors.black,
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+  // ── Styled Navigation Pill ──
+  Widget _navPill(
+      String label, {
+        bool isActive = false,
+        required VoidCallback onTap,
+      }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+        decoration: BoxDecoration(
+          color: isActive ? const Color(0xFF00D6C6) : const Color(0xFF88D4DB),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black38,
+              offset: Offset(2, 2),
+              blurRadius: 3,
+            )
+          ],
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            shadows: [
+              Shadow(
+                offset: Offset(2, 2),
+                blurRadius: 2,
+                color: Colors.black54,
+              ),
+            ],
+          ),
+        ),
       ),
-      child: Text(title),
     );
   }
 }
