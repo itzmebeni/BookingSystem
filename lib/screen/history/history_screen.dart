@@ -141,7 +141,10 @@ class HistoryScreen extends StatelessWidget {
                   _navPill(
                     'History',
                     isActive: true,
-                    onTap: () {}, // Already here
+                    onTap: () {
+                      // already on Home → do nothing or scroll to top
+                    },
+
                   ),
                 ],
               ),

@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/cars'); // TODO: open “Add booking” screen or modal
+                    Navigator.pushNamed(context, '/cars');
                   },
                   child: Container(
                     width: 55,

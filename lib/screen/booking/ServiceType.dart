@@ -191,7 +191,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          clearBooking();                    // empty the cart
+                          clearBooking();
                           Navigator.pushNamed(context, '/home');
                         },
                         child: Container(
