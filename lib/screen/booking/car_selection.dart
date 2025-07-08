@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:booking/models/booking.dart';
+
 
 class CarSelectionScreen extends StatelessWidget {
   const CarSelectionScreen({super.key});
@@ -97,7 +99,8 @@ class CarSelectionScreen extends StatelessWidget {
   Widget _carOption(BuildContext context, String label, String imagePath) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/services');
+        final booking = Booking()..carType = label;
+        Navigator.pushNamed(context, '/services', arguments: booking);
       },
       child: Container(
         decoration: BoxDecoration(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:booking/models/booking.dart';
 
 class ServicesScreen extends StatefulWidget {
   const ServicesScreen({super.key});
@@ -8,38 +9,51 @@ class ServicesScreen extends StatefulWidget {
 }
 
 class _ServicesScreenState extends State<ServicesScreen> {
-  final String selectedVehicle = 'Sedan';
+  late Booking booking;
 
   final List<Map<String, dynamic>> allServices = List.generate(15, (i) {
     return {
       'name': 'EC ${i + 1}',
-      'details': 'Carwash\nRepaint',
+      'details': 'Carwash / Repaint',
       'price': 125 + (i % 3) * 25,
     };
   });
 
   final List<Map<String, dynamic>> selectedServices = [];
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    booking = ModalRoute.of(context)!.settings.arguments as Booking;
+  }
+
   void toggleService(Map<String, dynamic> s) => setState(() {
-    selectedServices.contains(s) ? selectedServices.remove(s) : selectedServices.add(s);
+    selectedServices.contains(s)
+        ? selectedServices.remove(s)
+        : selectedServices.add(s);
   });
 
   void clearBooking() => setState(selectedServices.clear);
 
-  int get totalAmount => selectedServices.fold(0, (sum, s) => sum + s['price'] as int);
+  int get totalAmount =>
+      selectedServices.fold(0, (sum, s) => sum + s['price'] as int);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
       backgroundColor: const Color(0xFF2299A2),
-      // ── Header (same as Home, plus back icon) ───────────────────────────────
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
           decoration: const BoxDecoration(
             color: Colors.white,
-            boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.3), offset: Offset(0, 4), blurRadius: 4)],
+            boxShadow: [
+              BoxShadow(
+                  color: Color.fromARGB(77, 0, 0, 0),
+                  offset: Offset(0, 4),
+                  blurRadius: 4)
+            ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
@@ -64,7 +78,6 @@ class _ServicesScreenState extends State<ServicesScreen> {
           ),
         ),
       ),
-      // ── Body with matching gradient ─────────────────────────────────────────
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -90,18 +103,22 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // vehicle pill
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.teal.shade700,
                     borderRadius: BorderRadius.circular(20),
-                    boxShadow: [const BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.4), offset: Offset(0, 3), blurRadius: 4)],
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color.fromARGB(102, 0, 0, 0),
+                        offset: Offset(0, 3),
+                        blurRadius: 4,
+                      )
+                    ],
                   ),
-                  child: Text('Vehicle: $selectedVehicle', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                  child: Text('Vehicle: ${booking.carType}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 16),
-                // services grid
                 Expanded(
                   child: GridView.builder(
                     itemCount: allServices.length,
@@ -131,7 +148,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                               const SizedBox(height: 4),
                               Text(s['details'], style: const TextStyle(color: Colors.white70, fontSize: 12)),
                               const Spacer(),
-                              Text('PHP ${s['price']}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                              Text('₱${s['price']}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),
@@ -140,54 +157,47 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                // ── POS summary with header row ──────────────────────────────
                 Container(
                   padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(color: const Color.fromRGBO(0, 0, 0, 0.2), borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(
+                      color: const Color.fromARGB(77, 0, 0, 0),
+                      borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header row
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text('Service', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                          Text('Amount', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text('Service', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            Text('Amount', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ]),
                       const SizedBox(height: 4),
                       if (selectedServices.isEmpty)
                         const Text('No services selected', style: TextStyle(color: Colors.white))
                       else
-                        ...selectedServices.map(
-                              (item) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: Row(
+                        ...selectedServices.map((item) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(item['name'], style: const TextStyle(color: Colors.white)),
-                                Text('${item['price']} Php', style: const TextStyle(color: Colors.white)),
-                              ],
-                            ),
-                          ),
-                        ),
+                                Text('₱${item['price']}', style: const TextStyle(color: Colors.white)),
+                              ]),
+                        )),
                       if (selectedServices.isNotEmpty) const Divider(),
                       if (selectedServices.isNotEmpty)
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text('Total:', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                            Text('$totalAmount Php', style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-                          ],
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Total:', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                              Text('₱$totalAmount', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            ]),
                     ],
                   ),
                 ),
                 const SizedBox(height: 12),
-                // ── Buttons (Cancel left, Proceed right) ───────────────────
                 Row(
                   children: [
-                    // CANCEL BOOKING (left)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
@@ -197,10 +207,14 @@ class _ServicesScreenState extends State<ServicesScreen> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))],
-                          ),
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    blurRadius: 4,
+                                    offset: Offset(2, 4))
+                              ]),
                           child: const Center(
                             child: Text('Cancel Booking', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
@@ -208,20 +222,28 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    // PROCEED (right)
                     Expanded(
                       child: GestureDetector(
                         onTap: selectedServices.isEmpty
                             ? null
-                            : () => Navigator.pushNamed(context, '/customer'),
+                            : () {
+                          booking.services = selectedServices
+                              .map((m) => ServiceItem(m['name'], m['price'] as int))
+                              .toList();
+                          Navigator.pushNamed(context, '/customer', arguments: booking);
+                        },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 100),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           decoration: BoxDecoration(
-                            color: selectedServices.isEmpty ? Colors.grey : const Color(0xFF26C5E4), // 26C5E4
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))],
-                          ),
+                              color: selectedServices.isEmpty ? Colors.grey : const Color(0xFF26C5E4),
+                              borderRadius: BorderRadius.circular(30),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Colors.black45,
+                                    blurRadius: 4,
+                                    offset: Offset(2, 4))
+                              ]),
                           child: const Center(
                             child: Text('Proceed', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                           ),
