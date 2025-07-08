@@ -64,8 +64,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 // Avatar
                 const CircleAvatar(
                   radius: 50,
-                  backgroundColor: Colors.purpleAccent,
-                  child: Icon(Icons.person, size: 60, color: Colors.white),
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, size: 60, color: Colors.black38),
                 ),
                 const SizedBox(height: 16),
 

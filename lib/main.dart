@@ -3,6 +3,7 @@ import 'package:booking/screen/booking/car_selection.dart';
 import 'package:booking/screen/booking/customer_form.dart';
 import 'package:booking/screen/home/home_screen.dart';
 import 'package:booking/screen/pending/pending_screen.dart';
+import 'package:booking/screen/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:booking/screen/auth/login_screen.dart';
 import 'package:booking/screen/auth/signup_screen.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
         '/pending':    (_) => const PendingScreen(),
         '/cars':    (_) => const CarSelectionScreen(),
         '/customer':    (_) => const CustomerFormScreen(),
-
+        '/profile':    (_) => const ProfileScreen(),
 
 
 
