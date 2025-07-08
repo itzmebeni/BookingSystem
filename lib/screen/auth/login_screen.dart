@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       const SnackBar(content: Text('Logging in...')),
     );
 
-    Navigator.pushReplacementNamed(context, '/home'); // Or your main page route
+    Navigator.pushReplacementNamed(context, ''); // Or your main page route
   }
 
   @override
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/signup');
+                  Navigator.pushNamed(context, '');
                 },
                 child: const Text(
                   'SIGN UP',
