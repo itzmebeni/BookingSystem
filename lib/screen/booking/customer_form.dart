@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
 
-class CustomerFormScreen extends StatelessWidget {
+class CustomerFormScreen extends StatefulWidget {
   const CustomerFormScreen({super.key});
+
+  @override
+  State<CustomerFormScreen> createState() => _CustomerFormScreenState();
+}
+
+class _CustomerFormScreenState extends State<CustomerFormScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController firstNameController = TextEditingController();
+  final TextEditingController lastNameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final TextEditingController plateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +29,7 @@ class CustomerFormScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: const Color.fromARGB(77, 0, 0, 0),
+                color: Colors.black.withAlpha((0.3 * 255).round()),
                 offset: const Offset(0, 4),
                 blurRadius: 4,
               ),
@@ -24,10 +38,7 @@ class CustomerFormScreen extends StatelessWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.black87),
-              onPressed: () => Navigator.pop(context),
-            ),
+            automaticallyImplyLeading: false,
             title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
@@ -38,10 +49,10 @@ class CustomerFormScreen extends StatelessWidget {
                 height: 1.1,
               ),
             ),
-            actions: const [
-              Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: Icon(Icons.menu, color: Colors.black87),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.menu, color: Colors.black87),
+                onPressed: () {},
               ),
             ],
           ),
@@ -49,121 +60,137 @@ class CustomerFormScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/your_image.png'),
-            fit: BoxFit.cover,
+          gradient: LinearGradient(
+            colors: [Color(0xFF2299A2), Color(0xFF1F7E90)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Center(
-                      child: Text(
-                        'Customer Form',
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: [
-                            Shadow(offset: Offset(1, 1), blurRadius: 2),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    const SectionTitle('Customer Information'),
-                    Row(
-                      children: const [
-                        Expanded(child: CustomInput(label: 'First Name')),
-                        SizedBox(width: 10),
-                        Expanded(child: CustomInput(label: 'Last Name')),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    const CustomInput(label: 'Phone Number'),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: const [
-                        Expanded(child: CustomInput(label: 'Date')),
-                        SizedBox(width: 10),
-                        Expanded(child: CustomInput(label: 'Time')),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    const SectionTitle('Vehicle Information'),
-                    const CustomInput(label: 'License Plate'),
-                    const SizedBox(height: 30),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Cancel on left
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black45,
-                              blurRadius: 4,
-                              offset: Offset(2, 4),
-                            ),
-                          ],
-                        ),
-                        child: const Center(
-                          child: Text(
-                            'Cancel Booking',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                  const Center(
+                    child: Text(
+                      'Customer Form',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        height: 1.2,
+                        shadows: [Shadow(blurRadius: 2, offset: Offset(1, 1))],
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  // Confirm on right
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/confirmation');
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF26C5E4),
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black45,
-                              blurRadius: 4,
-                              offset: Offset(2, 4),
-                            ),
-                          ],
+                  const SizedBox(height: 20),
+
+                  const SectionTitle('Customer Information'),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomInput(
+                          label: 'First Name',
+                          controller: firstNameController,
+                          validator: (val) =>
+                          val == null || val.isEmpty ? 'Required' : null,
                         ),
-                        child: const Center(
-                          child: Text(
-                            'Confirm',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomInput(
+                          label: 'Last Name',
+                          controller: lastNameController,
+                          validator: (val) =>
+                          val == null || val.isEmpty ? 'Required' : null,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  CustomInput(
+                    label: 'Phone Number',
+                    controller: phoneController,
+                    validator: (val) {
+                      if (val == null || val.isEmpty) return 'Required';
+                      if (!RegExp(r'^[0-9]{10,11}$').hasMatch(val)) {
+                        return 'Invalid phone';
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CustomInput(
+                          label: 'Date',
+                          controller: dateController,
+                          validator: (val) =>
+                          val == null || val.isEmpty ? 'Required' : null,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CustomInput(
+                          label: 'Time',
+                          controller: timeController,
+                          validator: (val) =>
+                          val == null || val.isEmpty ? 'Required' : null,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  const SectionTitle('Vehicle Information'),
+
+                  CustomInput(
+                    label: 'License Plate',
+                    controller: plateController,
+                    validator: (val) =>
+                    val == null || val.isEmpty ? 'Required' : null,
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  GestureDetector(
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.pushNamed(context, '/confirmation');
+                      }
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF006B79),
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withAlpha((0.3 * 255).round()),
+                            offset: const Offset(0, 3),
+                            blurRadius: 5,
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'Confirm',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            letterSpacing: 1,
                           ),
                         ),
                       ),
@@ -172,25 +199,8 @@ class CustomerFormScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class SectionTitle extends StatelessWidget {
-  final String text;
-  const SectionTitle(this.text, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 18,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
       ),
     );
   }
@@ -198,7 +208,15 @@ class SectionTitle extends StatelessWidget {
 
 class CustomInput extends StatelessWidget {
   final String label;
-  const CustomInput({super.key, required this.label});
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+
+  const CustomInput({
+    super.key,
+    required this.label,
+    required this.controller,
+    this.validator,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +233,9 @@ class CustomInput extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          TextField(
+          TextFormField(
+            controller: controller,
+            validator: validator,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -223,7 +243,8 @@ class CustomInput extends StatelessWidget {
             decoration: InputDecoration(
               filled: true,
               fillColor: const Color.fromARGB(60, 255, 255, 255),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide.none,
@@ -231,6 +252,27 @@ class CustomInput extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class SectionTitle extends StatelessWidget {
+  final String title;
+  const SectionTitle(this.title, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, top: 20),
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 22,
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          shadows: [Shadow(offset: Offset(1, 1), blurRadius: 2)],
+        ),
       ),
     );
   }

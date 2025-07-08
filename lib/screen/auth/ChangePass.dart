@@ -108,7 +108,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                         borderRadius: BorderRadius.circular(30),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withAlpha((0.3 * 255).round()),
                             offset: const Offset(0, 4),
                             blurRadius: 6,
                           ),

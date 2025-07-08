@@ -15,7 +15,7 @@ class HistoryScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withAlpha((0.3 * 255).round()),
                 offset: const Offset(0, 4),
                 blurRadius: 4,
               ),
@@ -85,7 +85,7 @@ class HistoryScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.withAlpha((0.3 * 255).round()),
                             offset: const Offset(2, 3),
                             blurRadius: 4,
                           )
