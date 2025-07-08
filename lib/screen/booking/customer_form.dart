@@ -110,7 +110,7 @@ class CustomerFormScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-
+                        Navigator.pushNamed(context, '/');
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -142,7 +142,7 @@ class CustomerFormScreen extends StatelessWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-
+                        Navigator.pushNamed(context, '/confirmation');
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),

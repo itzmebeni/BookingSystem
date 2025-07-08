@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-
+                    Navigator.pushNamed(context, '/cars');
                   },
                   child: Container(
                     width: 55,
@@ -115,17 +115,11 @@ class HomeScreen extends StatelessWidget {
                   ),
                   _navPill(
                     'Pending',
-                    isActive: true,
-                    onTap: () {
-                      // already on Home → do nothing or scroll to top
-                    },
+                    onTap: () => Navigator.pushNamed(context, '/pending'),
                   ),
                   _navPill(
                     'History',
-                    isActive: true,
-                    onTap: () {
-                      // already on Home → do nothing or scroll to top
-                    },
+                    onTap: () => Navigator.pushNamed(context, '/history'),
                   ),
                 ],
               ),
