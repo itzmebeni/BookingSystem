@@ -106,7 +106,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
-                    color: Colors.teal.shade700,
+                    color: Color(0xA646C5EC),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: const [
                       BoxShadow(
@@ -137,7 +137,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: selected ? Colors.tealAccent[50] : Colors.teal[800],
+                            color: selected ? Color(0xA61CAFE1) : Color(0xFF165661),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))],
                           ),
