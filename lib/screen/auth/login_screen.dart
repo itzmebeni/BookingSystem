@@ -13,26 +13,62 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isPressed = false;
 
-  Widget _buildTextField(String hint, TextEditingController controller, {bool isPassword = false}) {
-    return TextField(
-      controller: controller,
-      obscureText: isPassword,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.2),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
-          borderSide: BorderSide.none,
+  String? _usernameError;
+  String? _passwordError;
+
+  Widget _buildTextField(String hint, TextEditingController controller,
+      {bool isPassword = false, String? errorText}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: controller,
+          obscureText: isPassword,
+          style: const TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            hintText: hint,
+            hintStyle: const TextStyle(color: Colors.white70),
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.2),
+            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: errorText != null
+                  ? const BorderSide(color: Colors.redAccent, width: 2)
+                  : BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(30),
+              borderSide: errorText != null
+                  ? const BorderSide(color: Colors.redAccent, width: 2)
+                  : const BorderSide(color: Colors.white70),
+            ),
+            errorText: errorText,
+            errorStyle: const TextStyle(color: Colors.redAccent),
+          ),
         ),
-      ),
+        const SizedBox(height: 5),
+      ],
     );
   }
 
   void _handleLogin() {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text.trim();
+
+    setState(() {
+      _usernameError = username.isEmpty ? 'Username is required' : null;
+      _passwordError = password.isEmpty ? 'Password is required' : null;
+    });
+
+    if (_usernameError != null || _passwordError != null) {
+      return; // Don't proceed if there are errors
+    }
+
     // TODO: Add actual validation logic
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Logging in...')),
@@ -76,12 +112,11 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 40),
-              _buildTextField('User Name', _usernameController),
-              const SizedBox(height: 20),
-              _buildTextField('Password', _passwordController, isPassword: true),
+              _buildTextField('User Name', _usernameController, errorText: _usernameError),
+              const SizedBox(height: 10),
+              _buildTextField('Password', _passwordController, isPassword: true, errorText: _passwordError),
               const SizedBox(height: 30),
 
-              // Replaces ElevatedButton with matching Sign-Up style
               GestureDetector(
                 onTapDown: (_) => setState(() => _isPressed = true),
                 onTapUp: (_) {
@@ -132,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
                   'SIGN UP',
                   style: TextStyle(
                     color: Colors.white,
-
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
                   ),

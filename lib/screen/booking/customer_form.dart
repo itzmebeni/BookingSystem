@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
 
-class CustomerFormScreen extends StatelessWidget {
+class CustomerFormScreen extends StatefulWidget {
   const CustomerFormScreen({super.key});
+
+  @override
+  State<CustomerFormScreen> createState() => _CustomerFormScreenState();
+}
+
+class _CustomerFormScreenState extends State<CustomerFormScreen> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _plateController = TextEditingController();
+
+  bool _hasErrors = false;
+  bool _showValidationMessage = false;
+
+  bool _validateFields() {
+    setState(() {
+      _hasErrors = _firstNameController.text.trim().isEmpty ||
+          _lastNameController.text.trim().isEmpty ||
+          _phoneController.text.trim().isEmpty ||
+          _dateController.text.trim().isEmpty ||
+          _timeController.text.trim().isEmpty ||
+          _plateController.text.trim().isEmpty;
+      _showValidationMessage = _hasErrors;
+    });
+
+    return !_hasErrors;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,27 +105,57 @@ class CustomerFormScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    if (_showValidationMessage)
+                      const Center(
+                        child: Text(
+                          'Please fill in all required fields.',
+                          style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    const SizedBox(height: 10),
                     const SectionTitle('Customer Information'),
                     Row(
-                      children: const [
-                        Expanded(child: CustomInput(label: 'First Name')),
-                        SizedBox(width: 10),
-                        Expanded(child: CustomInput(label: 'Last Name')),
+                      children: [
+                        Expanded(
+                            child: CustomInput(
+                                label: 'First Name',
+                                controller: _firstNameController,
+                                showError: _hasErrors && _firstNameController.text.trim().isEmpty)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: CustomInput(
+                                label: 'Last Name',
+                                controller: _lastNameController,
+                                showError: _hasErrors && _lastNameController.text.trim().isEmpty)),
                       ],
                     ),
                     const SizedBox(height: 10),
-                    const CustomInput(label: 'Phone Number'),
+                    CustomInput(
+                        label: 'Phone Number',
+                        controller: _phoneController,
+                        showError: _hasErrors && _phoneController.text.trim().isEmpty),
                     const SizedBox(height: 20),
                     Row(
-                      children: const [
-                        Expanded(child: CustomInput(label: 'Date')),
-                        SizedBox(width: 10),
-                        Expanded(child: CustomInput(label: 'Time')),
+                      children: [
+                        Expanded(
+                            child: CustomInput(
+                                label: 'Date',
+                                controller: _dateController,
+                                showError: _hasErrors && _dateController.text.trim().isEmpty)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: CustomInput(
+                                label: 'Time',
+                                controller: _timeController,
+                                showError: _hasErrors && _timeController.text.trim().isEmpty)),
                       ],
                     ),
                     const SizedBox(height: 20),
                     const SectionTitle('Vehicle Information'),
-                    const CustomInput(label: 'License Plate'),
+                    CustomInput(
+                        label: 'License Plate',
+                        controller: _plateController,
+                        showError: _hasErrors && _plateController.text.trim().isEmpty),
                     const SizedBox(height: 30),
                   ],
                 ),
@@ -106,11 +165,10 @@ class CustomerFormScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Row(
                 children: [
-                  // Cancel on left
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/');
+                        Navigator.pushReplacementNamed(context, '/home');
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -138,11 +196,12 @@ class CustomerFormScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Confirm on right
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, '/confirmation');
+                        if (_validateFields()) {
+                          Navigator.pushNamed(context, '/confirmation');
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -198,7 +257,15 @@ class SectionTitle extends StatelessWidget {
 
 class CustomInput extends StatelessWidget {
   final String label;
-  const CustomInput({super.key, required this.label});
+  final TextEditingController controller;
+  final bool showError;
+
+  const CustomInput({
+    super.key,
+    required this.label,
+    required this.controller,
+    this.showError = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -216,18 +283,28 @@ class CustomInput extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           TextField(
+            controller: controller,
             style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: const Color.fromARGB(60, 255, 255, 255),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              fillColor: showError
+                  ? const Color.fromARGB(30, 255, 255, 255)
+                  : const Color.fromARGB(60, 255, 255, 255),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide.none,
               ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              errorText: showError ? 'This field is required' : null,
+              errorStyle: const TextStyle(color: Colors.redAccent),
             ),
           ),
         ],
