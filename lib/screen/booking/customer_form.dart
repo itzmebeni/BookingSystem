@@ -9,30 +9,30 @@ class CustomerFormScreen extends StatefulWidget {
 }
 
 class _CustomerFormScreenState extends State<CustomerFormScreen> {
-  late Booking booking;
 
-  final _first = TextEditingController();
-  final _last = TextEditingController();
-  final _phone = TextEditingController();
-  final _plate = TextEditingController();
-  final _date = TextEditingController();
-  final _time = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final TextEditingController _plateController = TextEditingController();
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    booking = ModalRoute.of(context)!.settings.arguments as Booking;
-  }
+  bool _hasErrors = false;
+  bool _showValidationMessage = false;
 
-  @override
-  void dispose() {
-    _first.dispose();
-    _last.dispose();
-    _phone.dispose();
-    _plate.dispose();
-    _date.dispose();
-    _time.dispose();
-    super.dispose();
+  bool _validateFields() {
+    setState(() {
+      _hasErrors = _firstNameController.text.trim().isEmpty ||
+          _lastNameController.text.trim().isEmpty ||
+          _phoneController.text.trim().isEmpty ||
+          _dateController.text.trim().isEmpty ||
+          _timeController.text.trim().isEmpty ||
+          _plateController.text.trim().isEmpty;
+      _showValidationMessage = _hasErrors;
+    });
+
+    return !_hasErrors;
+
   }
 
   @override
@@ -77,19 +77,150 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/your_image.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Center(
+                      child: Text(
+                        'Customer Form',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(offset: Offset(1, 1), blurRadius: 2),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    if (_showValidationMessage)
+                      const Center(
+                        child: Text(
+                          'Please fill in all required fields.',
+                          style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    const SizedBox(height: 10),
+                    const SectionTitle('Customer Information'),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: CustomInput(
+                                label: 'First Name',
+                                controller: _firstNameController,
+                                showError: _hasErrors && _firstNameController.text.trim().isEmpty)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: CustomInput(
+                                label: 'Last Name',
+                                controller: _lastNameController,
+                                showError: _hasErrors && _lastNameController.text.trim().isEmpty)),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    CustomInput(
+                        label: 'Phone Number',
+                        controller: _phoneController,
+                        showError: _hasErrors && _phoneController.text.trim().isEmpty),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                            child: CustomInput(
+                                label: 'Date',
+                                controller: _dateController,
+                                showError: _hasErrors && _dateController.text.trim().isEmpty)),
+                        const SizedBox(width: 10),
+                        Expanded(
+                            child: CustomInput(
+                                label: 'Time',
+                                controller: _timeController,
+                                showError: _hasErrors && _timeController.text.trim().isEmpty)),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const SectionTitle('Vehicle Information'),
+                    CustomInput(
+                        label: 'License Plate',
+                        controller: _plateController,
+                        showError: _hasErrors && _plateController.text.trim().isEmpty),
+                    const SizedBox(height: 30),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              child: Row(
                 children: [
-                  const Center(
-                      child: Text('Customer Form',
-                          style: TextStyle(
-                              fontSize: 32,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacementNamed(context, '/home');
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black45,
+                              blurRadius: 4,
+                              offset: Offset(2, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Cancel Booking',
+                            style: TextStyle(
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_validateFields()) {
+                          Navigator.pushNamed(context, '/confirmation');
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF26C5E4),
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black45,
+                              blurRadius: 4,
+                              offset: Offset(2, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'Confirm',
+                            style: TextStyle(
                               color: Colors.white,
                               shadows: [
                                 Shadow(offset: Offset(1, 1), blurRadius: 2)
@@ -182,29 +313,57 @@ class SectionTitle extends StatelessWidget {
 class CustomInput extends StatelessWidget {
   final String label;
   final TextEditingController controller;
-  const CustomInput({super.key, required this.label, required this.controller});
+  final bool showError;
+
+  const CustomInput({
+    super.key,
+    required this.label,
+    required this.controller,
+    this.showError = false,
+  });
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(label,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.w600)),
-      const SizedBox(height: 5),
-      TextField(
-        controller: controller,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: const Color.fromARGB(60, 255, 255, 255),
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none),
-          contentPadding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        ),
-      )
-    ]),
-  );
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 5),
+          TextField(
+            controller: controller,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: showError
+                  ? const Color.fromARGB(30, 255, 255, 255)
+                  : const Color.fromARGB(60, 255, 255, 255),
+              contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              errorText: showError ? 'This field is required' : null,
+              errorStyle: const TextStyle(color: Colors.redAccent),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
