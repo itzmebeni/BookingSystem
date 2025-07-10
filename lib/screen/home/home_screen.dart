@@ -35,12 +35,24 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             actions: [
+              // Profile Image Icon (on the right side)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/profile'); // Navigate to profile screen
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage('https://www.example.com/your-profile-image.jpg'), // Replace with actual image URL
+                    radius: 18,
+                  ),
+                ),
+              ),
+              // 3-dots Menu (Dropdown below the profile image)
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, color: Colors.black87),
                 onSelected: (value) {
-                  if (value == 'edit') {
-                    Navigator.pushNamed(context, '/profile');
-                  } else if (value == 'logout') {
+                  if (value == 'logout') {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -68,14 +80,14 @@ class HomeScreen extends StatelessWidget {
                     );
                   }
                 },
+                // Position the dropdown just below the profile image
+                offset: Offset(0, 50),  // Adjust this value to fine-tune the dropdown position
                 itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: Text('Profile'),
-                  ),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     value: 'logout',
-                    child: Text('Logout', style: TextStyle(color: Colors.red)),
+                    child: Center(
+                      child: Text('Logout', style: TextStyle(color: Colors.red)),
+                    ),
                   ),
                 ],
               ),
@@ -83,6 +95,9 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+
+
+
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
