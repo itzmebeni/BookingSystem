@@ -12,14 +12,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   bool _isPressed = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
-  Widget _buildTextField(String hint, TextEditingController controller, {bool isPassword = false}) {
-    return TextField(
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) return 'Username is required';
+    if (value.length < 4) return 'Username must be at least 4 characters';
+    if (value.length > 20) return 'Username must be less than 20 characters';
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
+      return 'Username can only contain letters, numbers and underscore';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) return 'Password is required';
+    if (value.length < 6) return 'Password must be at least 6 characters';
+    if (!RegExp(r'[A-Z]').hasMatch(value)) return 'Password must contain at least one uppercase letter';
+    if (!RegExp(r'[a-z]').hasMatch(value)) return 'Password must contain at least one lowercase letter';
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value != _passwordController.text) return 'Passwords do not match';
+    return null;
+  }
+
+  void _handleSignUp() {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Signed up successfully! Redirecting to login...'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Clear the fields
+      _usernameController.clear();
+      _passwordController.clear();
+      _confirmPasswordController.clear();
+
+      // Navigate to LoginPage after 2 seconds
+      Future.delayed(const Duration(seconds: 2), () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LoginPage()),
+        );
+      });
+    }
+  }
+
+  Widget _buildTextField({
+    required String hint,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+    bool isPassword = false,
+    bool? obscureText,
+    VoidCallback? onToggleObscure,
+  }) {
+    return TextFormField(
       controller: controller,
-      obscureText: isPassword,
+      obscureText: obscureText ?? isPassword,
       style: const TextStyle(color: Colors.white),
+      validator: validator,
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.white70),
@@ -30,13 +89,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
+        errorStyle: const TextStyle(color: Colors.redAccent),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.redAccent),
+        ),
+        suffixIcon: isPassword
+            ? IconButton(
+          icon: Icon(
+            obscureText ?? true ? Icons.visibility_off : Icons.visibility,
+            color: Colors.white70,
+          ),
+          onPressed: onToggleObscure,
+        )
+            : null,
       ),
-    );
-  }
-
-  void _handleSignUp() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Signing up...')),
     );
   }
 
@@ -52,97 +119,117 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'E&C',
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                const Text(
-                  'CARWASH',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    letterSpacing: 2,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                _buildTextField('Create User Name', _usernameController),
-                const SizedBox(height: 16),
-                _buildTextField('Create Password', _passwordController, isPassword: true),
-                const SizedBox(height: 16),
-                _buildTextField('Confirm Password', _confirmPasswordController, isPassword: true),
-                const SizedBox(height: 24),
-
-                // Simple animated pressable button
-                GestureDetector(
-                  onTapDown: (_) => setState(() => _isPressed = true),
-                  onTapUp: (_) {
-                    setState(() => _isPressed = false);
-                    _handleSignUp();
-                  },
-                  onTapCancel: () => setState(() => _isPressed = false),
-                  child: AnimatedScale(
-                    scale: _isPressed ? 0.95 : 1.0,
-                    duration: const Duration(milliseconds: 100),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            offset: const Offset(0, 4),
-                            blurRadius: 6,
-                          ),
-                        ],
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'E&C',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 1.5,
                       ),
-                      child: const Center(
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 1,
+                    ),
+                    const Text(
+                      'CARWASH',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    _buildTextField(
+                      hint: 'Create User Name',
+                      controller: _usernameController,
+                      validator: _validateUsername,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      hint: 'Create Password',
+                      controller: _passwordController,
+                      validator: _validatePassword,
+                      isPassword: true,
+                      obscureText: _obscurePassword,
+                      onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                    const SizedBox(height: 16),
+                    _buildTextField(
+                      hint: 'Confirm Password',
+                      controller: _confirmPasswordController,
+                      validator: _validateConfirmPassword,
+                      isPassword: true,
+                      obscureText: _obscureConfirmPassword,
+                      onToggleObscure: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                    ),
+                    const SizedBox(height: 24),
+                    GestureDetector(
+                      onTapDown: (_) => setState(() => _isPressed = true),
+                      onTapUp: (_) {
+                        setState(() => _isPressed = false);
+                        _handleSignUp();
+                      },
+                      onTapCancel: () => setState(() => _isPressed = false),
+                      child: AnimatedScale(
+                        scale: _isPressed ? 0.95 : 1.0,
+                        duration: const Duration(milliseconds: 100),
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                offset: const Offset(0, 4),
+                                blurRadius: 6,
+                              ),
+                            ],
+                          ),
+                          child: const Center(
+                            child: Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: 1,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginPage()),
-                    );
-                  },
-                  child: const Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const LoginPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Already have an account? LOGIN',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),

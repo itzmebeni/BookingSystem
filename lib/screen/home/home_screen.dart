@@ -7,8 +7,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBody: true,
-      //backgroundColor: const Color(0xFF2299A2), // fallback if gradient fails
-      // ── APP BAR ────────────────────────────────────────────────────────────────
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
@@ -25,8 +23,7 @@ class HomeScreen extends StatelessWidget {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            automaticallyImplyLeading:
-            false, // <- no back arrow because this is the root screen
+            automaticallyImplyLeading: false,
             title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
@@ -56,10 +53,15 @@ class HomeScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context);
-                              // TODO: Add actual logout logic here
+                              Navigator.pop(context); // Close dialog
+                              // Clear navigation stack and go to login
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/login',
+                                    (Route<dynamic> route) => false,
+                              );
                             },
-                            child: const Text("Logout"),
+                            child: const Text("Logout", style: TextStyle(color: Colors.red)),
                           ),
                         ],
                       ),
@@ -73,16 +75,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const PopupMenuItem(
                     value: 'logout',
-                    child: Text('Logout'),
+                    child: Text('Logout', style: TextStyle(color: Colors.red)),
                   ),
                 ],
               ),
             ],
-
           ),
         ),
       ),
-      // ── BODY ───────────────────────────────────────────────────────────────────
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -96,7 +96,6 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             children: [
               const Spacer(),
-              // Welcome text
               const Center(
                 child: Text(
                   'Welcome\nBestfriend!',
@@ -117,7 +116,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              // Floating “add” button
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
@@ -138,16 +136,13 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 25),
-              // Navigation pills
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _navPill(
                     'Home',
                     isActive: true,
-                    onTap: () {
-                      // already on Home → do nothing or scroll to top
-                    },
+                    onTap: () {},
                   ),
                   _navPill(
                     'Pending',
@@ -166,7 +161,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // ── STYLED PILL WIDGET ───────────────────────────────────────────────────────
   Widget _navPill(
       String label, {
         bool isActive = false,

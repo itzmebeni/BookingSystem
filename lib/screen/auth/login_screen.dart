@@ -10,71 +10,91 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   bool _isPressed = false;
+  bool _obscurePassword = true;
 
-  String? _usernameError;
-  String? _passwordError;
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Username is required';
+    }
+    if (value.length < 4) {
+      return 'Username must be at least 4 characters';
+    }
+    return null;
+  }
 
-  Widget _buildTextField(String hint, TextEditingController controller,
-      {bool isPassword = false, String? errorText}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: controller,
-          obscureText: isPassword,
-          style: const TextStyle(color: Colors.white),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(color: Colors.white70),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.2),
-            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: errorText != null
-                  ? const BorderSide(color: Colors.redAccent, width: 2)
-                  : BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-              borderSide: errorText != null
-                  ? const BorderSide(color: Colors.redAccent, width: 2)
-                  : const BorderSide(color: Colors.white70),
-            ),
-            errorText: errorText,
-            errorStyle: const TextStyle(color: Colors.redAccent),
-          ),
-        ),
-        const SizedBox(height: 5),
-      ],
-    );
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
   }
 
   void _handleLogin() {
-    final username = _usernameController.text.trim();
-    final password = _passwordController.text.trim();
-
-    setState(() {
-      _usernameError = username.isEmpty ? 'Username is required' : null;
-      _passwordError = password.isEmpty ? 'Password is required' : null;
-    });
-
-    if (_usernameError != null || _passwordError != null) {
-      return; // Don't proceed if there are errors
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logging in...')),
+      );
+      Navigator.pushReplacementNamed(context, '/home');
     }
+  }
 
-    // TODO: Add actual validation logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Logging in...')),
+  Widget _buildTextField({
+    required String hint,
+    required TextEditingController controller,
+    required String? Function(String?) validator,
+    bool isPassword = false,
+    bool? obscureText,
+    VoidCallback? onToggleObscure,
+  }) {
+    return TextFormField(
+      controller: controller,
+      obscureText: obscureText ?? isPassword,
+      style: const TextStyle(color: Colors.white),
+      validator: validator,
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(color: Colors.white70),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.2),
+        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.white70),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(30),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+        ),
+        errorStyle: const TextStyle(color: Colors.redAccent),
+        suffixIcon: isPassword
+            ? IconButton(
+          icon: Icon(
+            obscureText ?? true ? Icons.visibility_off : Icons.visibility,
+            color: Colors.white70,
+          ),
+          onPressed: onToggleObscure,
+        )
+            : null,
+      ),
     );
-
-    Navigator.pushReplacementNamed(context, '/home'); // Or your main page route
   }
 
   @override
@@ -90,89 +110,103 @@ class _LoginPageState extends State<LoginPage> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                'E&C',
-                style: TextStyle(
-                  fontSize: 36,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const Text(
-                'CARWASH',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.5,
-                ),
-              ),
-              const SizedBox(height: 40),
-              _buildTextField('User Name', _usernameController, errorText: _usernameError),
-              const SizedBox(height: 10),
-              _buildTextField('Password', _passwordController, isPassword: true, errorText: _passwordError),
-              const SizedBox(height: 30),
-
-              GestureDetector(
-                onTapDown: (_) => setState(() => _isPressed = true),
-                onTapUp: (_) {
-                  setState(() => _isPressed = false);
-                  _handleLogin();
-                },
-                onTapCancel: () => setState(() => _isPressed = false),
-                child: AnimatedScale(
-                  scale: _isPressed ? 0.95 : 1.0,
-                  duration: const Duration(milliseconds: 100),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      gradient: const LinearGradient(
-                        colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          offset: const Offset(0, 4),
-                          blurRadius: 6,
-                        ),
-                      ],
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'E&C',
+                    style: TextStyle(
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.5,
                     ),
-                    child: const Center(
-                      child: Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1,
+                  ),
+                  const Text(
+                    'CARWASH',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.5,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  _buildTextField(
+                    hint: 'User Name',
+                    controller: _usernameController,
+                    validator: _validateUsername,
+                  ),
+                  const SizedBox(height: 10),
+                  _buildTextField(
+                    hint: 'Password',
+                    controller: _passwordController,
+                    validator: _validatePassword,
+                    isPassword: true,
+                    obscureText: _obscurePassword,
+                    onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
+                  ),
+                  const SizedBox(height: 30),
+                  GestureDetector(
+                    onTapDown: (_) => setState(() => _isPressed = true),
+                    onTapUp: (_) {
+                      setState(() => _isPressed = false);
+                      _handleLogin();
+                    },
+                    onTapCancel: () => setState(() => _isPressed = false),
+                    child: AnimatedScale(
+                      scale: _isPressed ? 0.95 : 1.0,
+                      duration: const Duration(milliseconds: 100),
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              offset: const Offset(0, 4),
+                              blurRadius: 6,
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'LOGIN',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              letterSpacing: 1,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/signup');
-                },
-                child: const Text(
-                  'SIGN UP',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/signup');
+                    },
+                    child: const Text(
+                      'SIGN UP',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
