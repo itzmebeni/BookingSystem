@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:booking/models/booking.dart';
 
 class CustomerFormScreen extends StatefulWidget {
   const CustomerFormScreen({super.key});
@@ -9,7 +8,6 @@ class CustomerFormScreen extends StatefulWidget {
 }
 
 class _CustomerFormScreenState extends State<CustomerFormScreen> {
-
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -32,7 +30,6 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
     });
 
     return !_hasErrors;
-
   }
 
   @override
@@ -43,21 +40,23 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                  color: Color.fromARGB(77, 0, 0, 0),
-                  offset: Offset(0, 4),
-                  blurRadius: 4)
+                color: const Color.fromARGB(77, 0, 0, 0),
+                offset: const Offset(0, 4),
+                blurRadius: 4,
+              ),
             ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.black87),
-                onPressed: () => Navigator.pop(context)),
+              icon: const Icon(Icons.arrow_back, color: Colors.black87),
+              onPressed: () => Navigator.pop(context),
+            ),
             title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
@@ -222,82 +221,21 @@ class _CustomerFormScreenState extends State<CustomerFormScreen> {
                             'Confirm',
                             style: TextStyle(
                               color: Colors.white,
-                              shadows: [
-                                Shadow(offset: Offset(1, 1), blurRadius: 2)
-                              ]))),
-                  const SizedBox(height: 20),
-                  const SectionTitle('Customer Information'),
-                  Row(children: [
-                    Expanded(child: CustomInput(controller: _first, label: 'First Name')),
-                    const SizedBox(width: 10),
-                    Expanded(child: CustomInput(controller: _last, label: 'Last Name')),
-                  ]),
-                  const SizedBox(height: 10),
-                  CustomInput(controller: _phone, label: 'Phone Number'),
-                  const SizedBox(height: 20),
-                  Row(children: [
-                    Expanded(child: CustomInput(controller: _date, label: 'Date')),
-                    const SizedBox(width: 10),
-                    Expanded(child: CustomInput(controller: _time, label: 'Time')),
-                  ]),
-                  const SizedBox(height: 20),
-                  const SectionTitle('Vehicle Information'),
-                  CustomInput(controller: _plate, label: 'License Plate'),
-                  const SizedBox(height: 30),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/home');
-                    },
-                    child: _actionBtn('Cancel Booking', Colors.red),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      booking
-                        ..firstName = _first.text
-                        ..lastName = _last.text
-                        ..phone = _phone.text
-                        ..plate = _plate.text
-                        ..date = _date.text
-                        ..time = _time.text;
-
-                      Navigator.pushNamed(context, '/confirmation', arguments: booking);
-                    },
-                    child: _actionBtn('Confirm', const Color(0xFF26C5E4)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
-
-  Widget _actionBtn(String t, Color c) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 14),
-    decoration: BoxDecoration(
-        color: c,
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: const [
-          BoxShadow(color: Colors.black45, blurRadius: 4, offset: Offset(2, 4))
-        ]),
-    child: Center(
-        child: Text(t,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold))),
-  );
 }
 
 class SectionTitle extends StatelessWidget {
@@ -305,9 +243,16 @@ class SectionTitle extends StatelessWidget {
   const SectionTitle(this.text, {super.key});
 
   @override
-  Widget build(BuildContext context) => Text(text,
+  Widget build(BuildContext context) {
+    return Text(
+      text,
       style: const TextStyle(
-          fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white));
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: Colors.white,
+      ),
+    );
+  }
 }
 
 class CustomInput extends StatelessWidget {
