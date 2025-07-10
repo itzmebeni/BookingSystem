@@ -11,6 +11,8 @@ import 'package:booking/screen/auth/ChangePass.dart';
 import 'package:booking/screen/booking/ServiceType.dart';
 import 'package:booking/screen/booking/confirmation.dart';
 import 'package:booking/screen/history/history_screen.dart';
+import 'package:booking/models/booking.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -34,16 +36,28 @@ class MyApp extends StatelessWidget {
       initialRoute: '/login',
       routes: {
         '/login':      (_) => const LoginPage(),
-        '/home':      (_) => const HomeScreen(),
-        '/confirmation':      (_) => const ConfirmationScreen(),
+        '/home':       (_) => const HomeScreen(),
         '/signup':     (_) => const SignUpScreen(),
         '/changePass': (_) => const ChangePasswordScreen(),
         '/services':   (_) => const ServicesScreen(),
         '/history':    (_) => const HistoryScreen(),
         '/pending':    (_) => const PendingScreen(),
-        '/cars':    (_) => const CarSelectionScreen(),
-        '/customer':    (_) => const CustomerFormScreen(),
+        '/cars':       (_) => const CarSelectionScreen(),
+        '/customer':   (_) => const CustomerFormScreen(),
         '/profile':    (_) => const ProfileScreen(),
+
+        '/confirmation': (context) {
+          final args = ModalRoute.of(context)!.settings.arguments;
+          if (args is Booking) {
+            return ConfirmationScreen(booking: args);
+          } else {
+            // Prevent crash by redirecting or showing error
+            return const Scaffold(
+              body: Center(child: Text("Booking data not found")),
+            );
+          }
+        },
+
 
 
 
