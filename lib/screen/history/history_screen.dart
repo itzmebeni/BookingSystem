@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'historydetails.dart'; // make sure this import matches your file
+
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
 
@@ -77,47 +79,79 @@ class HistoryScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF165661),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            offset: const Offset(2, 3),
-                            blurRadius: 4,
-                          )
-                        ],
-                      ),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Date:', style: TextStyle(color: Colors.white)),
-                              Text('05/27/2025', style: TextStyle(color: Colors.white)),
-                            ],
+                    return GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) => Center(
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 30),
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black26,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 4),
+                                  )
+                                ],
+                              ),
+                              height: 450,
+                              child: BookingDetailsScreen(
+                                date: '05/27/2025',
+                                carType: 'Sedan',
+                                total: '290.00',
+                              ),
+                            ),
                           ),
-                          SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Car Type:', style: TextStyle(color: Colors.white)),
-                              Text('Sedan', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                          SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total:', style: TextStyle(color: Colors.white)),
-                              Text('290.00', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                        ],
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF165661),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              offset: const Offset(2, 3),
+                              blurRadius: 4,
+                            ),
+                          ],
+                        ),
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Date:', style: TextStyle(color: Colors.white)),
+                                Text('05/27/2025', style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Car Type:', style: TextStyle(color: Colors.white)),
+                                Text('Sedan', style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Total:', style: TextStyle(color: Colors.white)),
+                                Text('290.00', style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -141,10 +175,7 @@ class HistoryScreen extends StatelessWidget {
                   _navPill(
                     'History',
                     isActive: true,
-                    onTap: () {
-                      // already on Home → do nothing or scroll to top
-                    },
-
+                    onTap: () {},
                   ),
                 ],
               ),
@@ -173,7 +204,7 @@ class HistoryScreen extends StatelessWidget {
               color: Colors.black38,
               offset: Offset(2, 2),
               blurRadius: 3,
-            )
+            ),
           ],
         ),
         child: Text(
