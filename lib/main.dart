@@ -12,6 +12,7 @@ import 'package:booking/screen/booking/ServiceType.dart';
 import 'package:booking/screen/booking/confirmation.dart';
 import 'package:booking/screen/history/history_screen.dart';
 import 'package:booking/models/booking.dart';
+import 'package:booking/screen/history/historydetails.dart';
 
 
 void main() => runApp(const MyApp());
@@ -45,6 +46,8 @@ class MyApp extends StatelessWidget {
         '/cars':       (_) => const CarSelectionScreen(),
         '/customer':   (_) => const CustomerFormScreen(),
         '/profile':    (_) => const ProfileScreen(),
+        '/historyd':    (_) => const BookingDetailsScreen(date: '', carType: '', total: '',),
+
 
         '/confirmation': (context) {
           final args = ModalRoute.of(context)!.settings.arguments;
