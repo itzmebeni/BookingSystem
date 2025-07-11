@@ -125,52 +125,71 @@ class PendingScreen extends StatelessWidget {
                 ),
               ),
 
-              // ── Pending Cards ──
+              // ── Booking Cards ──
               Expanded(
                 child: ListView.builder(
                   itemCount: 2,
                   itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF165661),
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.3),
-                            offset: const Offset(2, 3),
-                            blurRadius: 4,
-                          )
-                        ],
-                      ),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Date:', style: TextStyle(color: Colors.white)),
-                              Text('05/27/2025', style: TextStyle(color: Colors.white)),
-                            ],
+                    return GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20)),
                           ),
-                          SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Car Type:', style: TextStyle(color: Colors.white)),
-                              Text('Sedan', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                          SizedBox(height: 6),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total:', style: TextStyle(color: Colors.white)),
-                              Text('290.00', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
-                        ],
+                          builder: (_) => _bookingDetailsPopup(context),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF165661),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.3),
+                              offset: Offset(2, 3),
+                              blurRadius: 4,
+                            )
+                          ],
+                        ),
+                        child: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Date:',
+                                    style: TextStyle(color: Colors.white)),
+                                Text('05/27/2025',
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Car Type:',
+                                    style: TextStyle(color: Colors.white)),
+                                Text('Sedan',
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                            SizedBox(height: 6),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Total:',
+                                    style: TextStyle(color: Colors.white)),
+                                Text('290.00',
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
@@ -200,6 +219,107 @@ class PendingScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bookingDetailsPopup(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Back Button ──
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, size: 24),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ),
+            const SizedBox(height: 4),
+
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Car Type:', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('Sedan'),
+              ],
+            ),
+            const SizedBox(height: 6),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Date:', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('05/27/2025'),
+              ],
+            ),
+            const SizedBox(height: 6),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Time:', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('9:30 am'),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text('Services:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('EC1'),
+                Text('130.00'),
+              ],
+            ),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('EC1'),
+                Text('160.00'),
+              ],
+            ),
+            const Divider(thickness: 1, height: 20),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Total:', style: TextStyle(fontWeight: FontWeight.bold)),
+                Text('290.00'),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close modal
+                  // TODO: Add cancel logic here
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF65D6E0),
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  shadowColor: Colors.black54,
+                  elevation: 4,
+                ),
+                child: const Text(
+                  'Cancel Booking',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [Shadow(blurRadius: 2, offset: Offset(1, 1))],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
