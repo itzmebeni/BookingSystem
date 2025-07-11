@@ -1,7 +1,22 @@
 import 'package:flutter/material.dart';
 
-class PendingScreen extends StatelessWidget {
+class PendingScreen extends StatefulWidget {
   const PendingScreen({super.key});
+
+  @override
+  State<PendingScreen> createState() => _PendingScreenState();
+}
+
+class _PendingScreenState extends State<PendingScreen> {
+  List<String> bookingStatuses = ['pending', 'approved'];
+
+  void _cancelBooking(int index) {
+    if (index == 0 && bookingStatuses[index] != 'cancelled') {
+      setState(() {
+        bookingStatuses[index] = 'cancelled';
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +30,7 @@ class PendingScreen extends StatelessWidget {
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.3),
+                color: const Color.fromRGBO(0, 0, 0, 0.3),
                 offset: const Offset(0, 4),
                 blurRadius: 4,
               ),
@@ -26,7 +41,7 @@ class PendingScreen extends StatelessWidget {
             elevation: 0,
             automaticallyImplyLeading: false,
             title: const Text(
-              'E&C\nCarwash',
+              'E&C\\nCarwash',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w700,
@@ -36,20 +51,16 @@ class PendingScreen extends StatelessWidget {
               ),
             ),
             actions: [
-              // Profile Image Icon (on the right side)
               GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/profile'); // Navigate to profile screen
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
+                onTap: () => Navigator.pushNamed(context, '/profile'),
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 16),
                   child: CircleAvatar(
-                    backgroundImage: NetworkImage('https://www.example.com/your-profile-image.jpg'), // Replace with actual image URL
+                    backgroundImage: NetworkImage('https://www.example.com/your-profile-image.jpg'),
                     radius: 18,
                   ),
                 ),
               ),
-              // 3-dots Menu (Dropdown below the profile image)
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, color: Colors.black87),
                 onSelected: (value) {
@@ -66,13 +77,8 @@ class PendingScreen extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.pop(context); // Close dialog
-                              // Clear navigation stack and go to login
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                '/login',
-                                    (Route<dynamic> route) => false,
-                              );
+                              Navigator.pop(context);
+                              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
                             },
                             child: const Text("Logout", style: TextStyle(color: Colors.red)),
                           ),
@@ -81,10 +87,9 @@ class PendingScreen extends StatelessWidget {
                     );
                   }
                 },
-                // Position the dropdown just below the profile image
-                offset: Offset(0, 50),  // Adjust this value to fine-tune the dropdown position
+                offset: const Offset(0, 50),
                 itemBuilder: (BuildContext context) => [
-                  PopupMenuItem(
+                  const PopupMenuItem(
                     value: 'logout',
                     child: Center(
                       child: Text('Logout', style: TextStyle(color: Colors.red)),
@@ -96,7 +101,6 @@ class PendingScreen extends StatelessWidget {
           ),
         ),
       ),
-
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -124,22 +128,20 @@ class PendingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
-              // ── Booking Cards ──
               Expanded(
                 child: ListView.builder(
-                  itemCount: 2,
+                  itemCount: bookingStatuses.length,
                   itemBuilder: (context, index) {
+                    String status = bookingStatuses[index];
                     return GestureDetector(
                       onTap: () {
                         showModalBottomSheet(
                           context: context,
                           backgroundColor: Colors.white,
                           shape: const RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20)),
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                           ),
-                          builder: (_) => _bookingDetailsPopup(context),
+                          builder: (_) => _bookingDetailsPopup(context, index, status),
                         );
                       },
                       child: Container(
@@ -156,36 +158,38 @@ class PendingScreen extends StatelessWidget {
                             )
                           ],
                         ),
-                        child: const Column(
+                        child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Date:',
-                                    style: TextStyle(color: Colors.white)),
-                                Text('05/27/2025',
-                                    style: TextStyle(color: Colors.white)),
+                                Text('Date:', style: TextStyle(color: Colors.white)),
+                                Text('05/27/2025', style: TextStyle(color: Colors.white)),
                               ],
                             ),
-                            SizedBox(height: 6),
-                            Row(
+                            const SizedBox(height: 6),
+                            const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Car Type:',
-                                    style: TextStyle(color: Colors.white)),
-                                Text('Sedan',
-                                    style: TextStyle(color: Colors.white)),
+                                Text('Car Type:', style: TextStyle(color: Colors.white)),
+                                Text('Sedan', style: TextStyle(color: Colors.white)),
                               ],
                             ),
-                            SizedBox(height: 6),
+                            const SizedBox(height: 6),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Total:',
-                                    style: TextStyle(color: Colors.white)),
-                                Text('290.00',
-                                    style: TextStyle(color: Colors.white)),
+                                const Text('Total:', style: TextStyle(color: Colors.white)),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    const Text('290.00', style: TextStyle(color: Colors.white)),
+                                    if (status == 'cancelled')
+                                      const Text('Cancelled',
+                                          style: TextStyle(color: Colors.redAccent, fontSize: 12)),
+                                  ],
+                                ),
                               ],
                             ),
                           ],
@@ -195,26 +199,13 @@ class PendingScreen extends StatelessWidget {
                   },
                 ),
               ),
-
               const SizedBox(height: 16),
-
-              // ── Navigation Pills ──
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _navPill(
-                    'Home',
-                    onTap: () => Navigator.pushNamed(context, '/home'),
-                  ),
-                  _navPill(
-                    'Pending',
-                    isActive: true,
-                    onTap: () {},
-                  ),
-                  _navPill(
-                    'History',
-                    onTap: () => Navigator.pushNamed(context, '/history'),
-                  ),
+                  _navPill('Home', onTap: () => Navigator.pushNamed(context, '/home')),
+                  _navPill('Pending', isActive: true, onTap: () {}),
+                  _navPill('History', onTap: () => Navigator.pushNamed(context, '/history')),
                 ],
               ),
             ],
@@ -224,7 +215,7 @@ class PendingScreen extends StatelessWidget {
     );
   }
 
-  Widget _bookingDetailsPopup(BuildContext context) {
+  Widget _bookingDetailsPopup(BuildContext context, int index, String status) {
     return Padding(
       padding: const EdgeInsets.all(20),
       child: SingleChildScrollView(
@@ -232,7 +223,6 @@ class PendingScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Back Button ──
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
@@ -241,7 +231,6 @@ class PendingScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -266,22 +255,15 @@ class PendingScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            const Text('Services:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Services:', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('EC1'),
-                Text('130.00'),
-              ],
+              children: [Text('EC1'), Text('130.00')],
             ),
             const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('EC1'),
-                Text('160.00'),
-              ],
+              children: [Text('EC1'), Text('160.00')],
             ),
             const Divider(thickness: 1, height: 20),
             const Row(
@@ -293,18 +275,16 @@ class PendingScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Center(
-              child: ElevatedButton(
+              child: status == 'pending'
+                  ? ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Close modal
-                  // TODO: Add cancel logic here
+                  _cancelBooking(index);
+                  Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF65D6E0),
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                   shadowColor: Colors.black54,
                   elevation: 4,
                 ),
@@ -317,6 +297,25 @@ class PendingScreen extends StatelessWidget {
                     shadows: [Shadow(blurRadius: 2, offset: Offset(1, 1))],
                   ),
                 ),
+              )
+                  : Container(
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                decoration: BoxDecoration(
+                  color: status == 'cancelled'
+                      ? Colors.redAccent.shade100
+                      : const Color(0xFFD0F0F2),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  status == 'cancelled' ? 'Booking Cancelled' : 'Approved by admin',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: status == 'cancelled'
+                        ? Colors.red.shade700
+                        : const Color(0xFF3B7A85),
+                  ),
+                ),
               ),
             ),
           ],
@@ -325,11 +324,7 @@ class PendingScreen extends StatelessWidget {
     );
   }
 
-  Widget _navPill(
-      String label, {
-        bool isActive = false,
-        required VoidCallback onTap,
-      }) {
+  Widget _navPill(String label, {bool isActive = false, required VoidCallback onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
