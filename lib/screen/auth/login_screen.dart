@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.white70),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.2),
+        fillColor: Colors.white.withAlpha(51),
         contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
@@ -150,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                     onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                   ),
                   const SizedBox(height: 30),
+                  // LOGIN Button
                   GestureDetector(
                     onTapDown: (_) => setState(() => _isPressed = true),
                     onTapUp: (_) {
@@ -165,20 +166,11 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.3),
-                              offset: const Offset(0, 4),
-                              blurRadius: 6,
-                            ),
-                          ],
+                          color: Colors.black, // Updated to solid black to match image
                         ),
                         child: const Center(
                           child: Text(
-                            'LOGIN',
+                            'Continue',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -190,20 +182,94 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
-                    child: const Text(
-                      'SIGN UP',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
+
+// Sign Up Below LOGIN
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have an account? ",
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: const Text(
+                          'Sign up',
+                          style: TextStyle(
+                            color: Colors.blueAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+// OR Separator
+                  Row(
+                    children: const [
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white54,
+                          thickness: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          color: Colors.white54,
+                          thickness: 1,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+// Google Sign-in Button
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: TextButton.icon(
+                      onPressed: () {
+                        //signInWithGoogle(context);
+                      },
+                      icon: Image.asset(
+                        'assets/images/google_icon.jpg',
+                        height: 24,
+                      ),
+                      label: const Text(
+                        'Continue with Google',
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

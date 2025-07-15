@@ -52,7 +52,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
               BoxShadow(
                   color: Color.fromARGB(77, 0, 0, 0),
                   offset: Offset(0, 4),
-                  blurRadius: 4)
+                  blurRadius: 4),
             ],
           ),
           child: AppBar(
@@ -73,11 +73,66 @@ class _ServicesScreenState extends State<ServicesScreen> {
               ),
             ),
             actions: [
-              IconButton(icon: const Icon(Icons.menu, color: Colors.black87), onPressed: () {}),
+              // Profile Image Icon (on the right side)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/profile'); // Navigate to profile screen
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage('https://www.example.com/your-profile-image.jpg'), // Replace with actual image URL
+                    radius: 18,
+                  ),
+                ),
+              ),
+              // 3-dots Menu (Dropdown below the profile image)
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, color: Colors.black87),
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text("Are you sure you want to logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close dialog
+                              // Clear navigation stack and go to login
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/login',
+                                    (Route<dynamic> route) => false,
+                              );
+                            },
+                            child: const Text("Logout", style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                offset: Offset(0, 50),  // Adjust this value to fine-tune the dropdown position
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Center(
+                      child: Text('Logout', style: TextStyle(color: Colors.red)),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ),
+
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(

@@ -13,19 +13,22 @@ class CarSelectionScreen extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.3),
-                offset: const Offset(0, 4),
-                blurRadius: 4,
-              ),
+                  color: Color.fromARGB(77, 0, 0, 0),
+                  offset: Offset(0, 4),
+                  blurRadius: 4),
             ],
           ),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.pop(context),
+            ),
             title: const Text(
               'E&C\nCarwash',
               style: TextStyle(
@@ -37,14 +40,66 @@ class CarSelectionScreen extends StatelessWidget {
               ),
             ),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black87),
-                onPressed: () {},
+              // Profile Image Icon (on the right side)
+              GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/profile'); // Navigate to profile screen
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 16),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage('https://www.example.com/your-profile-image.jpg'), // Replace with actual image URL
+                    radius: 18,
+                  ),
+                ),
+              ),
+              // 3-dots Menu (Dropdown below the profile image)
+              PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert, color: Colors.black87),
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text("Logout"),
+                        content: const Text("Are you sure you want to logout?"),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text("Cancel"),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close dialog
+                              // Clear navigation stack and go to login
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                '/login',
+                                    (Route<dynamic> route) => false,
+                              );
+                            },
+                            child: const Text("Logout", style: TextStyle(color: Colors.red)),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                offset: Offset(0, 50),  // Adjust this value to fine-tune the dropdown position
+                itemBuilder: (BuildContext context) => [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Center(
+                      child: Text('Logout', style: TextStyle(color: Colors.red)),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
