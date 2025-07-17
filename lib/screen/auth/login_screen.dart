@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'forgotpass.dart'; // import the screen directly
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -149,7 +150,31 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: _obscurePassword,
                     onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                   ),
+                  const SizedBox(height: 10),
+
+                  // Forgot Password Link
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                        );
+                      },
+                      child: const Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontWeight: FontWeight.w500,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 30),
+
                   // LOGIN Button
                   GestureDetector(
                     onTapDown: (_) => setState(() => _isPressed = true),
@@ -166,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
-                          color: Colors.black, // Updated to solid black to match image
+                          color: Colors.black,
                         ),
                         child: const Center(
                           child: Text(
@@ -185,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 20),
 
-// Sign Up Below LOGIN
+                  // Sign Up Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -210,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 20),
 
-// OR Separator
+                  // OR Separator
                   Row(
                     children: const [
                       Expanded(
@@ -237,7 +262,7 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 20),
 
-// Google Sign-in Button
+                  // Google Sign-in Button
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -246,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: TextButton.icon(
                       onPressed: () {
-                        //signInWithGoogle(context);
+                        // signInWithGoogle(context);
                       },
                       icon: Image.asset(
                         'assets/images/google_icon.jpg',

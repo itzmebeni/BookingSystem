@@ -9,7 +9,11 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -17,6 +21,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _isPressed = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+
+  String? _validateRequired(String? value, String fieldName) {
+    if (value == null || value.trim().isEmpty) return '$fieldName is required';
+    return null;
+  }
 
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) return 'Username is required';
@@ -28,11 +37,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) return 'Email is required';
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) return 'Enter a valid email';
+    return null;
+  }
+
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) return 'Password is required';
     if (value.length < 6) return 'Password must be at least 6 characters';
-    if (!RegExp(r'[A-Z]').hasMatch(value)) return 'Password must contain at least one uppercase letter';
-    if (!RegExp(r'[a-z]').hasMatch(value)) return 'Password must contain at least one lowercase letter';
+    if (!RegExp(r'[A-Z]').hasMatch(value)) return 'Include at least one uppercase letter';
+    if (!RegExp(r'[a-z]').hasMatch(value)) return 'Include at least one lowercase letter';
     return null;
   }
 
@@ -51,12 +66,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ),
       );
 
-      // Clear the fields
+      _firstNameController.clear();
+      _lastNameController.clear();
       _usernameController.clear();
+      _phoneController.clear();
+      _emailController.clear();
       _passwordController.clear();
       _confirmPasswordController.clear();
 
-      // Navigate to LoginPage after 2 seconds
       Future.delayed(const Duration(seconds: 2), () {
         Navigator.pushReplacement(
           context,
@@ -84,14 +101,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         hintStyle: const TextStyle(color: Colors.white70),
         filled: true,
         fillColor: Colors.white.withOpacity(0.2),
-        contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide.none,
         ),
         errorStyle: const TextStyle(color: Colors.redAccent),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(25),
           borderSide: const BorderSide(color: Colors.redAccent),
         ),
         suffixIcon: isPassword
@@ -121,7 +138,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: 30.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -145,13 +162,55 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         letterSpacing: 2,
                       ),
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 30),
+
+                    // First & Last Name Row
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildTextField(
+                            hint: 'First Name',
+                            controller: _firstNameController,
+                            validator: (v) => _validateRequired(v, "First Name"),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: _buildTextField(
+                            hint: 'Last Name',
+                            controller: _lastNameController,
+                            validator: (v) => _validateRequired(v, "Last Name"),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Username
                     _buildTextField(
-                      hint: 'Create User Name',
+                      hint: 'Create Username',
                       controller: _usernameController,
                       validator: _validateUsername,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
+
+                    // Phone Number
+                    _buildTextField(
+                      hint: 'Phone Number',
+                      controller: _phoneController,
+                      validator: (v) => _validateRequired(v, "Phone Number"),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Email
+                    _buildTextField(
+                      hint: 'Enter Email Address',
+                      controller: _emailController,
+                      validator: _validateEmail,
+                    ),
+                    const SizedBox(height: 14),
+
+                    // Password
                     _buildTextField(
                       hint: 'Create Password',
                       controller: _passwordController,
@@ -160,7 +219,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       obscureText: _obscurePassword,
                       onToggleObscure: () => setState(() => _obscurePassword = !_obscurePassword),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 14),
+
+                    // Confirm Password
                     _buildTextField(
                       hint: 'Confirm Password',
                       controller: _confirmPasswordController,
@@ -170,6 +231,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       onToggleObscure: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                     ),
                     const SizedBox(height: 24),
+
+                    // Sign Up Button
                     GestureDetector(
                       onTapDown: (_) => setState(() => _isPressed = true),
                       onTapUp: (_) {
@@ -185,9 +248,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF2b5876), Color(0xFF4e4376)],
-                            ),
+                            color: Colors.black,
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.3),
@@ -211,6 +272,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
+
                     GestureDetector(
                       onTap: () {
                         Navigator.pushReplacement(
